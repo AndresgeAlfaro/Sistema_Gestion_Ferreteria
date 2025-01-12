@@ -1,4 +1,4 @@
-package cr.una.Model;
+package cr.una.Proxy;
 
 import java.util.List;
 
