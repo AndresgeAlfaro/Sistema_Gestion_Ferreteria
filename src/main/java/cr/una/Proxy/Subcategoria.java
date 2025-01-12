@@ -3,26 +3,32 @@ package cr.una.Proxy;
 import java.util.List;
 
 public class Subcategoria {
-    private String ID;
-    private String Nombre;
-    private String Descripcion;
+    private int ID;
+    private String nombre;
+    private String descripcion;
     private List<Articulo> Articulos;
 
-    Subcategoria(String ID, String Nombre, String Descripcion, List<Articulo> Articulos) {
+    public Subcategoria(int ID, String nombre, String descripcion){
         this.ID = ID;
-        this.Nombre = Nombre;
-        this.Descripcion = Descripcion;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
+
+   public Subcategoria(int ID, String nombre, String descripcion, List<Articulo> Articulos) {
+        this.ID = ID;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
         this.Articulos = Articulos;
     }
 
-    public String getID() { return ID; }
-    public String getNombre() { return Nombre; }
-    public String getDescripcion() { return Descripcion; }
+    public int getID() { return ID; }
+    public String getNombre() { return nombre; }
+    public String getDescripcion() { return descripcion; }
     public List<Articulo> getArticulos() { return Articulos; }
 
-    public void setID(String ID) { this.ID = ID; }
-    public void setNombre(String Nombre) { this.Nombre = Nombre; }
-    public void setDescripcion(String Descripcion) { this.Descripcion = Descripcion; }
+    public void setID(int ID) { this.ID = ID; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     public void setArticulos(List<Articulo> Articulos) { this.Articulos = Articulos; }
 
 }
