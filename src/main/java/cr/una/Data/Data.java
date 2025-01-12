@@ -23,7 +23,7 @@ public class Data {
     public void setCategorias(List<Categoria> categorias) throws ParserConfigurationException, TransformerException {
         Categorias = categorias;
 
-        XmlPersistent source = new XmlPersistent();
+        XMLPersistent source = new XMLPersistent();
         try {
             source.guardarCategorias(Categorias);
         } catch (ParserConfigurationException e) {
@@ -38,7 +38,7 @@ public class Data {
     }
 
     public void LoadXML(){
-        XmlPersistent source = new XmlPersistent();
+        XMLPersistent source = new XMLPersistent();
         source.cargarCategorias();
         Categorias = source.getCategorias();
     }
