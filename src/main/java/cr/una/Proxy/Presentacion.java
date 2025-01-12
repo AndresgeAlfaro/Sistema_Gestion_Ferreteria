@@ -1,4 +1,4 @@
-package cr.una.Model;
+package cr.una.Proxy;
 
 public class Presentacion {
     private int Unidad;      //Cantidad de unidad de medida
