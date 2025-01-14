@@ -2,6 +2,16 @@ package cr.una.Presentation.Model.View;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import cr.una.Presentation.Model.Controller.Controller;
+import cr.una.Proxy.Categoria;
+import cr.una.Proxy.Subcategoria;
+import cr.una.Proxy.Articulo;
+import cr.una.Proxy.Presentacion;
+
 
 public class mainView {
     private JPanel panel1;
@@ -42,6 +52,8 @@ public class mainView {
     private JScrollPane ScrollListArt;
     private JScrollPane ScrollListArtPresentation;
 
+    Controller controller;
+
     public mainView() {
         //PanelOpciones.setEnabledAt(1,false);
         //PanelOpciones.setEnabledAt(2,false);
@@ -70,6 +82,40 @@ public class mainView {
         ListSub.setModel(model);
         ListArt.setModel(model);
         ListPresentation.setModel(model2);
+
+        BtnSaveCat.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    if(InputCodeViewCat.getText().isEmpty() || InputNameViewCat.getText().isEmpty() || InputDescriptionCat.getText().isEmpty()) {
+                        String CamposVacios = "Campos vacios: ";
+                        if (InputCodeViewCat.getText().isEmpty()) {
+                            CamposVacios += "Codigo ";
+                        }
+                        if (InputNameViewCat.getText().isEmpty()){
+                            CamposVacios += "Nombre ";
+                        }
+                        if (InputDescriptionCat.getText().isEmpty()){
+                            CamposVacios += "Descripcion";
+                        }
+                        throw new Exception(CamposVacios);
+                    }
+                    try{
+                        Categoria categoria = new Categoria(Integer.parseInt(InputCodeViewCat.getText()), InputNameViewCat.getText(), InputDescriptionCat.getText());
+                        controller.AnadirCategoria(categoria);
+                    }catch (Exception ex){
+                        throw new Exception("El codigo debe ser un valor numerico");
+                    }
+                    JOptionPane.showMessageDialog(panel1, "Categoria añadida", "Información", JOptionPane.INFORMATION_MESSAGE);
+                    InputCodeViewCat.setText("");
+                    InputNameViewCat.setText("");
+                    InputDescriptionCat.setText("");
+                }catch(Exception ex){
+                    JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+            }
+        });
     }
     public void loadView()
     {
@@ -81,7 +127,10 @@ public class mainView {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
-
-
     }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+    public Controller getController() {return controller;}
 }
