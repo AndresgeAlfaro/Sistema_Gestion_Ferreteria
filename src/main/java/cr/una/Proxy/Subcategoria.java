@@ -31,4 +31,11 @@ public class Subcategoria {
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     public void setArticulos(List<Articulo> Articulos) { this.Articulos = Articulos; }
 
+    public void addArticulo(Articulo articulo) {
+        Articulos.add(articulo);
+    }
+    public boolean isEmpty() {
+        return Articulos.isEmpty();
+    }
+
 }

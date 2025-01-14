@@ -32,4 +32,11 @@ public class Categoria {
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     public void setSubcategorias(List<Subcategoria> Subcategorias) { this.Subcategorias = Subcategorias; }
 
+    public void addSubcategoria(Subcategoria Subcategoria) {
+        Subcategorias.add(Subcategoria);
+    }
+    public boolean isEmpty() {
+        return Subcategorias.isEmpty();
+    }
+
 }

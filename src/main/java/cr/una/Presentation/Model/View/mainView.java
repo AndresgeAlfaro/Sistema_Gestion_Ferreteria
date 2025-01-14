@@ -1,12 +1,9 @@
 package cr.una.Presentation.Model.View;
-import cr.una.Presentation.Model.Controller.Controller;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class mainView {
-    private Controller mainController;
-
     private JPanel panel1;
     private JTabbedPane PanelOpciones;
     private JTextField InputCodeViewCat;
@@ -46,7 +43,6 @@ public class mainView {
     private JScrollPane ScrollListArtPresentation;
 
     public mainView() {
-        mainController = new Controller();
         //PanelOpciones.setEnabledAt(1,false);
         //PanelOpciones.setEnabledAt(2,false);
         InputCodeViewCat.setBorder(null);
@@ -74,9 +70,6 @@ public class mainView {
         ListSub.setModel(model);
         ListArt.setModel(model);
         ListPresentation.setModel(model2);
-    }
-    public void setController(Controller controller){
-        mainController = controller;
     }
     public void loadView()
     {
