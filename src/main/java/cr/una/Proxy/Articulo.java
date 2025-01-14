@@ -25,4 +25,6 @@ public class Articulo {
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     //public void setPresentaciones(List<Presentacion> Presentaciones) { this.Presentaciones = Presentaciones; }
 
+    //public void add(Presentacion presentacion) { this.Presentaciones.add(presentacion); }
+
 }
