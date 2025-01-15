@@ -33,10 +33,6 @@ public class Data {
         }
     }
 
-    public void replaceEmpleado(int index, Categoria cat){
-        Categorias.set(index, cat);
-    }
-
     public void LoadXML(){
         XMLPersistent source = new XMLPersistent();
         source.cargarCategorias();
