@@ -114,65 +114,73 @@ public class XMLPersistent {
         }
     }
 
-    public List cargarCategorias(){
+    public List cargarCategorias() {
         l = new ArrayList<>();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
-            // optional, but recommended
-            // process XML securely, avoid attacks like XML External Entities (XXE)
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            // parse XML file
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new File("Categorias.xml"));
-            // optional, but recommended
-            // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             doc.getDocumentElement().normalize();
-            // get <staff>
-            // this loads all nodes called "categoria" into a list to be processed
             NodeList list = doc.getElementsByTagName("categoria");
-            for (int temp = 0; temp < list.getLength(); temp++) { //categorias
-                //current node
+
+            for (int temp = 0; temp < list.getLength(); temp++) { // Categorías
                 Node node = list.item(temp);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
-                    // process subcategories list
-                    NodeList sublist = element.getElementsByTagName("subcategoria");
-                    List<Subcategoria> subcategorias = new ArrayList<>();
-                    for(int temp2 = 0; temp2 < sublist.getLength(); temp2++) { //subcategorias
-                        Node subnode = sublist.item(temp2);
-                        if (subnode.getNodeType() == Node.ELEMENT_NODE) {
-                            Element element2 = (Element) subnode;
-                            NodeList artlist = element2.getElementsByTagName("articulo");
-                            List<Articulo> articulos = new ArrayList<>();
-                            for(int temp3 = 0; temp3 < artlist.getLength(); temp3++) { //articulos
-                                Node artnode = artlist.item(temp3);
-                                if (artnode.getNodeType() == Node.ELEMENT_NODE) {
-                                    Element element3 = (Element) artnode;
-                                    Articulo articulo = new Articulo(Integer.parseInt(element3.getAttribute("id")),
-                                            element3.getElementsByTagName("nombre").item(0).getTextContent(),
-                                            element3.getElementsByTagName("descripcion").item(0).getTextContent());
-                                    articulos.add(articulo);
+                    String idStr = element.getAttribute("id");
+                    if (idStr != null && !idStr.isEmpty()) {
+                        int id = Integer.parseInt(idStr);
+                        String nombre = element.getElementsByTagName("nombre").item(0).getTextContent();
+                        String descripcion = element.getElementsByTagName("descripcion").item(0).getTextContent();
+
+                        NodeList sublist = element.getElementsByTagName("subcategoria");
+                        List<Subcategoria> subcategorias = new ArrayList<>();
+                        for (int temp2 = 0; temp2 < sublist.getLength(); temp2++) { // Subcategorías
+                            Node subnode = sublist.item(temp2);
+                            if (subnode.getNodeType() == Node.ELEMENT_NODE) {
+                                Element element2 = (Element) subnode;
+                                String subIdStr = element2.getAttribute("id");
+                                if (subIdStr != null && !subIdStr.isEmpty()) {
+                                    int subId = Integer.parseInt(subIdStr);
+                                    String subNombre = element2.getElementsByTagName("nombre").item(0).getTextContent();
+                                    String subDescripcion = element2.getElementsByTagName("descripcion").item(0).getTextContent();
+
+                                    NodeList artlist = element2.getElementsByTagName("articulo");
+                                    List<Articulo> articulos = new ArrayList<>();
+                                    for (int temp3 = 0; temp3 < artlist.getLength(); temp3++) { // Artículos
+                                        Node artnode = artlist.item(temp3);
+                                        if (artnode.getNodeType() == Node.ELEMENT_NODE) {
+                                            Element element3 = (Element) artnode;
+                                            String artIdStr = element3.getAttribute("id");
+                                            if (artIdStr != null && !artIdStr.isEmpty()) {
+                                                int artId = Integer.parseInt(artIdStr);
+                                                String artNombre = element3.getElementsByTagName("nombre").item(0).getTextContent();
+                                                String artDescripcion = element3.getElementsByTagName("descripcion").item(0).getTextContent();
+
+                                                Articulo articulo = new Articulo(artId, artNombre, artDescripcion);
+                                                articulos.add(articulo);
+                                            }
+                                        }
+                                    }
+                                    Subcategoria subCategoria = new Subcategoria(subId, subNombre, subDescripcion, articulos);
+                                    subcategorias.add(subCategoria);
                                 }
                             }
-                            Subcategoria subCategoria = new Subcategoria(Integer.parseInt(element2.getAttribute("id")),
-                                    element2.getElementsByTagName("nombre").item(0).getTextContent(),
-                                    element2.getElementsByTagName("descripcion").item(0).getTextContent(),
-                                    articulos);
-                            subcategorias.add(subCategoria);
                         }
+                        Categoria categoria = new Categoria(id, nombre, descripcion, subcategorias);
+                        l.add(categoria);
+                    } else {
+                        System.out.println("Error: Atributo 'id' está ausente o vacío en categoría.");
                     }
-                    Categoria e=new Categoria(Integer.parseInt(element.getAttribute("id")),
-                            element.getElementsByTagName("nombre").item(0).getTextContent(),
-                            element.getElementsByTagName("descripcion").item(0).getTextContent(),
-                            subcategorias);
-                    l.add(e);
                 }
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
-        return  l;
+        return l;
     }
+
 
     public List<Categoria> getCategorias() {
         return l;
