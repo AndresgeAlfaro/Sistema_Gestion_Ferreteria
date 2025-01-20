@@ -1,9 +1,9 @@
 package cr.una.Data;
 
-import cr.una.Logic.Categoria;
-import cr.una.Logic.Subcategoria;
-import cr.una.Logic.Articulo;
-import cr.una.Logic.Presentacion;
+import cr.una.Proxy.Categoria;
+import cr.una.Proxy.Subcategoria;
+import cr.una.Proxy.Articulo;
+import cr.una.Proxy.Unidades;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -106,7 +106,7 @@ public class XMLPersistent {
                             ArticuloDoc.appendChild(artDescripcion);
 
                             // Create Presentaciones
-                            List<Presentacion> PreList = new ArrayList<>();
+                            List<Unidades> PreList = new ArrayList<>();
                             PreList = articulo.getPresentaciones();
                             if(PreList.size() > 0) {
                                 PresentacionesDoc = doc.createElement("presentaciones");
@@ -187,15 +187,15 @@ public class XMLPersistent {
                                 //==========================================Presentacion====================================
 
                                 NodeList listPresentacion = articuloEl.getElementsByTagName("presentacion");
-                                List<Presentacion> presentaciones = new ArrayList<>();
+                                List<Unidades> presentaciones = new ArrayList<>();
 
                                 for(int k = 0; k < listPresentacion.getLength(); k++){
                                     Node NodeA = listPresentacion.item(k);
                                     if(NodeA.getNodeType()==Node.ELEMENT_NODE){
                                         Element presentacionEl = (Element) NodeA;
-                                        Presentacion presentacion =new Presentacion(presentacionEl.getElementsByTagName("unidad").item(0).getTextContent(),
+                                        Unidades unidades =new Unidades(presentacionEl.getElementsByTagName("unidad").item(0).getTextContent(),
                                                 presentacionEl.getElementsByTagName("cantidad").item(0).getTextContent());
-                                        presentaciones.add(presentacion);
+                                        presentaciones.add(unidades);
                                     }
                                 }
                                 Articulo articulo = new Articulo(articuloEl.getElementsByTagName("id").item(0).getTextContent(),

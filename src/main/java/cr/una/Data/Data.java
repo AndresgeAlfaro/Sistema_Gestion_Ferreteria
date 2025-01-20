@@ -1,6 +1,6 @@
 package cr.una.Data;
 
-import cr.una.Logic.Categoria;
+import cr.una.Proxy.Categoria;
 
 import java.util.ArrayList;
 import java.util.List;

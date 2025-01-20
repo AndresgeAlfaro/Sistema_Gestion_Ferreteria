@@ -1,12 +1,9 @@
-package cr.una.Logic;
+package cr.una.Proxy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Presentacion {
+public class Unidades {
     private String unidad, cantidad;
 
-    public Presentacion(String unidad, String cantidad){
+    public Unidades(String unidad, String cantidad){
         this.unidad = unidad;
         this.cantidad = cantidad;
     }

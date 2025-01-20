@@ -1,9 +1,9 @@
 package cr.una.Presentation.Model;
 
-import cr.una.Logic.Articulo;
-import cr.una.Logic.Categoria;
-import cr.una.Logic.Presentacion;
-import cr.una.Logic.Subcategoria;
+import cr.una.Proxy.Articulo;
+import cr.una.Proxy.Categoria;
+import cr.una.Proxy.Unidades;
+import cr.una.Proxy.Subcategoria;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class Model {
     private Categoria currentCategoria;
     private Subcategoria currentSubcategoria;
     private Articulo currentArticulo;
-    private Presentacion currentPresentacion;
+    private Unidades currentUnidades;
 
     public void init(List<Categoria> c){
         setCategorias(c);
@@ -43,8 +43,8 @@ public class Model {
                 .filter(i->i.getID().equals(cod)).findFirst().orElse(null);
         return result;
     }
-    public Presentacion readPResentaciones(String cod, String cod2){
-        Presentacion result = currentArticulo.getPresentaciones().stream()
+    public Unidades readPResentaciones(String cod, String cod2){
+        Unidades result = currentArticulo.getPresentaciones().stream()
                 .filter(i->i.getUnidad().equals(cod)&&i.getCantidad().equals(cod2)).findFirst().orElse(null);
         return result;
     }
@@ -71,11 +71,11 @@ public class Model {
     public void setCurrentArticulo(Articulo current) {
         this.currentArticulo = current;
     }
-    public void setCurrentPresentacion(Presentacion current) {
-        this.currentPresentacion = current;
+    public void setCurrentPresentacion(Unidades current) {
+        this.currentUnidades = current;
     }
-    public Presentacion getCurrentPresentacion() {
-        return currentPresentacion;
+    public Unidades getCurrentPresentacion() {
+        return currentUnidades;
     }
 
 }

@@ -3,6 +3,10 @@ package cr.una.Presentation.Controller;
 import cr.una.Logic.*;
 import cr.una.Presentation.Model.Model;
 import cr.una.Presentation.View.mainView;
+import cr.una.Proxy.Articulo;
+import cr.una.Proxy.Categoria;
+import cr.una.Proxy.Unidades;
+import cr.una.Proxy.Subcategoria;
 
 
 public class Controller {
@@ -33,8 +37,8 @@ public class Controller {
         Service.instance().guardarArticulo(model.getCurrentCategoria(),getCurrentSubcategoria(), articulo);
         model.setCategorias(Service.instance().getCategorias());
     }
-    public void guardarPresentacion(Presentacion presentacion) throws Exception {
-        Service.instance().guardarPresentacion(model.getCurrentCategoria(),getCurrentSubcategoria(), getCurrentArticulo(),presentacion);
+    public void guardarPresentacion(Unidades unidades) throws Exception {
+        Service.instance().guardarPresentacion(model.getCurrentCategoria(),getCurrentSubcategoria(), getCurrentArticulo(), unidades);
         model.setCategorias(Service.instance().getCategorias());
     }
     public void editCategoria(String cod) throws Exception {
@@ -68,7 +72,7 @@ public class Controller {
     public Articulo getCurrentArticulo() {
         return model.getCurrentArticulo();
     }
-    public Presentacion getCurrentPresentacion() {
+    public Unidades getCurrentPresentacion() {
         return model.getCurrentPresentacion();
     }
     public void editarCategoria(Categoria activo) throws Exception {
@@ -89,7 +93,7 @@ public class Controller {
         model.setCurrentSubCategoria(model.readSubCategorias(model.getCurrentSubCategoria().getID()));
         model.setCurrentArticulo(model.readArticulos(activo.getID()));
     }
-    public void editarPresentacion(Presentacion activo) throws Exception {
+    public void editarPresentacion(Unidades activo) throws Exception {
         Service.instance().editarPresentacion(model.getCurrentCategoria(),model.getCurrentSubCategoria(),model.getCurrentArticulo(), activo);
         model.setCategorias(Service.instance().getCategorias());
         model.setCurrentCategoria(model.readCategorias(model.getCurrentCategoria().getID()));
@@ -127,7 +131,7 @@ public class Controller {
         Subcategoria c = getCurrentSubcategoria();
         return c.getArticulos().get(index);
     }
-    public Presentacion getPresentaciones(int index){
+    public Unidades getPresentaciones(int index){
         Articulo c = getCurrentArticulo();
         return c.getPresentaciones().get(index);
     }

@@ -8,11 +8,11 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 
-import cr.una.Logic.Articulo;
-import cr.una.Logic.Presentacion;
-import cr.una.Logic.Subcategoria;
+import cr.una.Proxy.Articulo;
+import cr.una.Proxy.Unidades;
+import cr.una.Proxy.Subcategoria;
 import cr.una.Presentation.Controller.Controller;
-import cr.una.Logic.Categoria;
+import cr.una.Proxy.Categoria;
 
 
 public class mainView {
@@ -674,7 +674,7 @@ public class mainView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    Presentacion data = new Presentacion(InputUnit.getText().toUpperCase(),InputCapacity.getText().toUpperCase());
+                    Unidades data = new Unidades(InputUnit.getText().toUpperCase(),InputCapacity.getText().toUpperCase());
                     if (editar[3]) {
                         controller.editarPresentacion(data);
                         JOptionPane.showMessageDialog(panel1, "Modificado con exito", "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -971,7 +971,7 @@ public class mainView {
                 selectButtons[i].setBackground(new Color(51,55,66));
             }
             for(int i=0;i<5&&i!=(getSizeList(3)-(indexListPresentation*5));i++){
-                Presentacion user=controller.getPresentaciones(i+(indexListPresentation*5));
+                Unidades user=controller.getPresentaciones(i+(indexListPresentation*5));
                 if(user!=null){
                     ListUnitFilds[i].setText(user.getUnidad());
                     ListCapacityFilds[i].setText(user.getCantidad());

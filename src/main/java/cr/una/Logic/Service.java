@@ -3,6 +3,10 @@ package cr.una.Logic;
 import cr.una.Data.Data;
 import cr.una.Data.XMLPersistent;
 
+import cr.una.Proxy.Articulo;
+import cr.una.Proxy.Categoria;
+import cr.una.Proxy.Unidades;
+import cr.una.Proxy.Subcategoria;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -64,9 +68,9 @@ public class Service {
                 .filter(i->i.getID().equals(articulo.getID())).findFirst().orElse(null);
         return result;
     }
-    public Presentacion readPresentacion(Articulo articulo, Presentacion presentacion){ //CAMBIAR A PROBLEMA DE EXAMEN
-        Presentacion result = articulo.getPresentaciones().stream()
-                .filter((i->i.getUnidad().equals(presentacion.getUnidad())&&i.getCantidad().equals(presentacion.getCantidad()))).findFirst().orElse(null);
+    public Unidades readPresentacion(Articulo articulo, Unidades unidades){ //CAMBIAR A PROBLEMA DE EXAMEN
+        Unidades result = articulo.getPresentaciones().stream()
+                .filter((i->i.getUnidad().equals(unidades.getUnidad())&&i.getCantidad().equals(unidades.getCantidad()))).findFirst().orElse(null);
         return result;
     }
     public void guardarCategoria(Categoria categoria) throws Exception {
@@ -100,18 +104,18 @@ public class Service {
             data.getCategorias().add(a);
         }
     }
-    public void guardarPresentacion(Categoria categoria,Subcategoria subCategoria,Articulo articulo, Presentacion presentacion) throws Exception {
+    public void guardarPresentacion(Categoria categoria,Subcategoria subCategoria,Articulo articulo, Unidades unidades) throws Exception {
         Categoria a = readCategoria(categoria);
         Subcategoria b = readSubCategoria(a,subCategoria);
         Articulo c = readArticulo(b,articulo);
-        if(readPresentacion(c,presentacion)!= null){
+        if(readPresentacion(c, unidades)!= null){
             throw new Exception("Ya existe una presentacion con los mismos datos");
         }
         else{
             data.getCategorias().remove(a);
             a.getSubcategorias().remove(b);
             b.getArticulos().remove(c);
-            c.getPresentaciones().add(presentacion);
+            c.getPresentaciones().add(unidades);
             b.getArticulos().add(c);
             a.getSubcategorias().add(b);
             data.getCategorias().add(a);
@@ -150,11 +154,11 @@ public class Service {
             data.getCategorias().add(a);
         }
     }
-    public void editarPresentacion(Categoria cat, Subcategoria sub,Articulo art,Presentacion activo) throws Exception {
+    public void editarPresentacion(Categoria cat, Subcategoria sub, Articulo art, Unidades activo) throws Exception {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,sub);
         Articulo c = readArticulo(b,art);
-        Presentacion d = readPresentacion(c,activo);
+        Unidades d = readPresentacion(c,activo);
         if(a == null) throw new Exception("No existe una presentacion registrada con esos datos");
         else{
             data.getCategorias().remove(a);

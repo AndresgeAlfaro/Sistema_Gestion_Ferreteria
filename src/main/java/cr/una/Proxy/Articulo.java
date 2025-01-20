@@ -1,22 +1,22 @@
-package cr.una.Logic;
+package cr.una.Proxy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Articulo {
     private String nombre, descripcion;
-    private List<Presentacion> presentaciones;
+    private List<Unidades> presentaciones;
     String ID;
 
 
     public Articulo(String ID, String nombre, String descripcion){
-        presentaciones = new ArrayList<Presentacion>();
+        presentaciones = new ArrayList<Unidades>();
         this.ID = ID;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
 
-    public Articulo(String ID, String nombre, String descripcion, List<Presentacion> presentaciones){
+    public Articulo(String ID, String nombre, String descripcion, List<Unidades> presentaciones){
         this.presentaciones = presentaciones;
         this.ID = ID;
         this.nombre = nombre;
@@ -31,7 +31,7 @@ public class Articulo {
         return nombre;
     }
 
-    public List<Presentacion> getPresentaciones() {
+    public List<Unidades> getPresentaciones() {
         return presentaciones;
     }
 
