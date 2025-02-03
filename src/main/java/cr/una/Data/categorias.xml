@@ -1,81 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<categorias>
-    <categoria>
+<inventario>
+    <medidas/>
+    <medida>
+        <id>0</id>
+        <nombre>Litro (l)</nombre>
+    </medida>
+    <medida>
         <id>1</id>
-        <nombre>Herramientas</nombre>
-        <descripcion>Herramientas manuales y eléctricas</descripcion>
-        <subCategorias>
-            <subCategoria>
-                <id>1.1</id>
-                <nombre>Herramientas Manuales</nombre>
-                <descripcion>Herramientas operadas manualmente</descripcion>
-                <articulos>
-                    <articulo>
-                        <id>1.1.1</id>
-                        <nombre>Martillo</nombre>
-                        <descripcion>Martillo de acero con mango de madera</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Pieza</unidad>
-                                <cantidad>1</cantidad>
-                            </presentacion>
-                        </presentaciones>
-                    </articulo>
-                    <articulo>
-                        <id>1.1.2</id>
-                        <nombre>Destornillador</nombre>
-                        <descripcion>Destornillador de punta plana</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Pieza</unidad>
-                                <cantidad>1</cantidad>
-                            </presentacion>
-                        </presentaciones>
-                    </articulo>
-                    <articulo>
-                        <id>1.1.3</id>
-                        <nombre>Llave Inglesa</nombre>
-                        <descripcion>Llave ajustable para diversas tuercas</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Pieza</unidad>
-                                <cantidad>1</cantidad>
-                            </presentacion>
-                        </presentaciones>
-                    </articulo>
-                </articulos>
-            </subCategoria>
-            <subCategoria>
-                <id>1.2</id>
-                <nombre>Herramientas Eléctricas</nombre>
-                <descripcion>Herramientas que requieren energía eléctrica</descripcion>
-                <articulos>
-                    <articulo>
-                        <id>1.2.1</id>
-                        <nombre>Taladro</nombre>
-                        <descripcion>Taladro eléctrico con varias brocas</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Kit</unidad>
-                                <cantidad>1</cantidad>
-                            </presentacion>
-                        </presentaciones>
-                    </articulo>
-                    <articulo>
-                        <id>1.2.2</id>
-                        <nombre>Amoladora</nombre>
-                        <descripcion>Amoladora angular para cortar y desbastar</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Pieza</unidad>
-                                <cantidad>1</cantidad>
-                            </presentacion>
-                        </presentaciones>
-                    </articulo>
-                </articulos>
-            </subCategoria>
-        </subCategorias>
-    </categoria>
+        <nombre>Mililitro (ml)</nombre>
+    </medida>
+    <medida>
+        <id>2</id>
+        <nombre>Metro (m)</nombre>
+    </medida>
+    <medida>
+        <id>3</id>
+        <nombre>Centrimetro (cm)</nombre>
+    </medida>
+    <medida>
+        <id>4</id>
+        <nombre>Kilo (kg)</nombre>
+    </medida>
+    <medida>
+        <id>5</id>
+        <nombre>Gramo (g)</nombre>
+    </medida>
+    <medida>
+        <id>6</id>
+        <nombre>Pie</nombre>
+    </medida>
+    <medida>
+        <id>7</id>
+        <nombre>Pulgada</nombre>
+    </medida>
+    <categorias/>
     <categoria>
         <id>2</id>
         <nombre>Materiales de Construcción</nombre>
@@ -90,12 +48,6 @@
                         <id>2.1.1</id>
                         <nombre>Cemento Portland</nombre>
                         <descripcion>Saco de 50kg de cemento Portland</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Saco</unidad>
-                                <cantidad>50kg</cantidad>
-                            </presentacion>
-                        </presentaciones>
                     </articulo>
                 </articulos>
             </subCategoria>
@@ -108,23 +60,11 @@
                         <id>2.2.1</id>
                         <nombre>Ladrillo Rojo</nombre>
                         <descripcion>Ladrillo estándar de 6x12x24 cm</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Pieza</unidad>
-                                <cantidad>1</cantidad>
-                            </presentacion>
-                        </presentaciones>
                     </articulo>
                     <articulo>
                         <id>2.2.2</id>
                         <nombre>Ladrillo Perforado</nombre>
                         <descripcion>Ladrillo para reducción de peso en muros</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Pieza</unidad>
-                                <cantidad>1</cantidad>
-                            </presentacion>
-                        </presentaciones>
                     </articulo>
                 </articulos>
             </subCategoria>
@@ -144,23 +84,11 @@
                         <id>3.1.1</id>
                         <nombre>Pintura Blanca</nombre>
                         <descripcion>Galón de pintura blanca mate</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Galón</unidad>
-                                <cantidad>4L</cantidad>
-                            </presentacion>
-                        </presentaciones>
                     </articulo>
                     <articulo>
                         <id>3.1.2</id>
                         <nombre>Pintura Azul</nombre>
                         <descripcion>Galón de pintura azul brillante</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Galón</unidad>
-                                <cantidad>4L</cantidad>
-                            </presentacion>
-                        </presentaciones>
                     </articulo>
                 </articulos>
             </subCategoria>
@@ -173,12 +101,6 @@
                         <id>3.2.1</id>
                         <nombre>Esmalte Blanco</nombre>
                         <descripcion>Esmalte sintético blanco brillante</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>Litro</unidad>
-                                <cantidad>1L</cantidad>
-                            </presentacion>
-                        </presentaciones>
                     </articulo>
                 </articulos>
             </subCategoria>
@@ -198,15 +120,55 @@
                         <id>4.1.1</id>
                         <nombre>Tractor</nombre>
                         <descripcion>Tractor de contruccion</descripcion>
-                        <presentaciones>
-                            <presentacion>
-                                <unidad>1</unidad>
-                                <cantidad>5000K</cantidad>
-                            </presentacion>
-                        </presentaciones>
                     </articulo>
                 </articulos>
             </subCategoria>
         </subCategorias>
     </categoria>
-</categorias>
+    <categoria>
+        <id>1</id>
+        <nombre>Herramientas</nombre>
+        <descripcion>Herramientas manuales y eléctricas</descripcion>
+        <subCategorias>
+            <subCategoria>
+                <id>1.2</id>
+                <nombre>Herramientas Eléctricas</nombre>
+                <descripcion>Herramientas que requieren energía eléctrica</descripcion>
+                <articulos>
+                    <articulo>
+                        <id>1.2.1</id>
+                        <nombre>Taladro</nombre>
+                        <descripcion>Taladro eléctrico con varias brocas</descripcion>
+                    </articulo>
+                    <articulo>
+                        <id>1.2.2</id>
+                        <nombre>Amoladora</nombre>
+                        <descripcion>Amoladora angular para cortar y desbastar</descripcion>
+                    </articulo>
+                </articulos>
+            </subCategoria>
+            <subCategoria>
+                <id>1.1</id>
+                <nombre>Herramientas Manuales</nombre>
+                <descripcion>Herramientas operadas manualmente</descripcion>
+                <articulos>
+                    <articulo>
+                        <id>1.1.1</id>
+                        <nombre>Martillo</nombre>
+                        <descripcion>Martillo de acero con mango de madera</descripcion>
+                    </articulo>
+                    <articulo>
+                        <id>1.1.2</id>
+                        <nombre>Destornillador</nombre>
+                        <descripcion>Destornillador de punta plana</descripcion>
+                    </articulo>
+                    <articulo>
+                        <id>1.1.3</id>
+                        <nombre>Llave Inglesa</nombre>
+                        <descripcion>Llave ajustable para diversas tuercas</descripcion>
+                    </articulo>
+                </articulos>
+            </subCategoria>
+        </subCategorias>
+    </categoria>
+</inventario>

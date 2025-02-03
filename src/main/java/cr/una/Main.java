@@ -1,7 +1,7 @@
 package cr.una;
 
 import cr.una.Presentation.Controller.Controller;
-import cr.una.Presentation.View.mainView;
+import cr.una.Presentation.View.View;
 import cr.una.Logic.Service;
 
 import javax.swing.*;
@@ -15,11 +15,12 @@ public class Main {
 
     public static void main(String[] args) {
         main = new Controller();
-        mainView view = new mainView();
+        View view = new View();
         main.startAplication(view);
         window = new JFrame();
-        window.setContentPane(view.getPanel());
-        window.setSize(1000, 600);
+        window.setContentPane(view.getmainPanel());
+        window.setSize(1200, 710);
+        window.setLocationRelativeTo(null);
         window.setResizable(false);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.addWindowListener(new WindowAdapter() {
@@ -28,7 +29,7 @@ public class Main {
                 try{
                     Service.instance().guardarXML();
                 }catch (Exception ex){
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Información", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

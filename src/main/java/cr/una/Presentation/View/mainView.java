@@ -674,7 +674,7 @@ public class mainView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    Presentacion data = new Presentacion(InputUnit.getText().toUpperCase(),InputCapacity.getText().toUpperCase());
+                    Presentacion data = new Presentacion(InputUnit.getText().toUpperCase(),InputCapacity.getText().toUpperCase(),0,0);
                     if (editar[3]) {
                         controller.editarPresentacion(data);
                         JOptionPane.showMessageDialog(panel1, "Modificado con exito", "Información", JOptionPane.INFORMATION_MESSAGE);

@@ -2,14 +2,16 @@ package cr.una.Presentation.Controller;
 
 import cr.una.Logic.*;
 import cr.una.Presentation.Model.Model;
-import cr.una.Presentation.View.mainView;
+import cr.una.Presentation.View.View;
+
+import java.util.List;
 
 
 public class Controller {
     private Model model;
-    private mainView view;
+    private View view;
 
-    public void startAplication(mainView view) {
+    public void startAplication(View view) {
         try{
             Service.instance().cargarXML();
         }catch (Exception ex){
@@ -19,7 +21,7 @@ public class Controller {
         this.view = view;
         view.setController(this);
         model.init(Service.instance().getCategorias());
-        this.view.actualizarListaCategoria();
+        this.view.updateList(0);
     }
     public void guardarCategoria(Categoria categoria) throws Exception {
         Service.instance().guardarCategoria(categoria);
@@ -115,6 +117,9 @@ public class Controller {
     public void deletePresentation(int index) throws Exception {
         Service.instance().deletePresentation(model.getCurrentCategoria(),model.getCurrentSubCategoria(),model.getCurrentArticulo(),index);
         model.setCategorias(Service.instance().getCategorias());
+    }
+    public List<Categoria> getCategorias() {
+        return model.getCategorias();
     }
     public Categoria getCategoria(int index){
         return model.getCategorias().get(index);
