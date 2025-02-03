@@ -1,22 +1,21 @@
 package cr.una.Presentation.Model;
 
-import cr.una.Logic.Articulo;
-import cr.una.Logic.Categoria;
-import cr.una.Logic.Presentacion;
-import cr.una.Logic.Subcategoria;
+import cr.una.Logic.*;
 
 import java.util.List;
 
 public class Model {
     private List<Categoria> categorias;
+    private List<Medida> medidas;
     private Categoria currentCategoria;
     private Subcategoria currentSubcategoria;
     private Articulo currentArticulo;
     private Presentacion currentPresentacion;
 
-    public void init(List<Categoria> c){
+    public void init(List<Categoria> c, List<Medida> a){
         setCategorias(c);
         currentCategoria = new Categoria();
+        setMedidas(a);
     }
 
 
@@ -28,6 +27,17 @@ public class Model {
         this.categorias = categorias;
     }
 
+    public List<Medida> getMedidas() {
+        return medidas;
+    }
+    public void setMedidas(List<Medida> medidas) {
+        this.medidas = medidas;
+    }
+    public Medida readMedida(String id){
+        Medida result = getMedidas().stream()
+                .filter(i->i.getID().equals(id)).findFirst().orElse(null);
+        return result;
+    }
     public Categoria readCategorias(String cod){
         Categoria result = getCategorias().stream()
                 .filter(i->i.getID().equals(cod)).findFirst().orElse(null);
@@ -43,9 +53,9 @@ public class Model {
                 .filter(i->i.getID().equals(cod)).findFirst().orElse(null);
         return result;
     }
-    public Presentacion readPResentaciones(String cod, String cod2){
+    public Presentacion readPresentaciones(String cod){
         Presentacion result = currentArticulo.getPresentaciones().stream()
-                .filter(i->i.getUnidad().equals(cod)&&i.getCantidad().equals(cod2)).findFirst().orElse(null);
+                .filter(i->i.getUnidad().equals(cod)).findFirst().orElse(null);
         return result;
     }
     public Categoria getCurrentCategoria() {

@@ -35,6 +35,10 @@ public class Articulo {
         return presentaciones;
     }
 
+    public void setPresentaciones(List<Presentacion> presentaciones) {
+        this.presentaciones = presentaciones;
+    }
+
     public String getID() {
         return ID;
     }

@@ -35,6 +35,10 @@ public class Subcategoria {
         return articulos;
     }
 
+    public void setArticulos(List<Articulo> articulos) {
+        this.articulos = articulos;
+    }
+
     public String getID() {
         return ID;
     }

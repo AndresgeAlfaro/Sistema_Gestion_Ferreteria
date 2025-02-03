@@ -38,6 +38,10 @@ public class Categoria {
         return subcategorias;
     }
 
+    public void setSubcategorias(List<Subcategoria> subcategorias) {
+        this.subcategorias = subcategorias;
+    }
+
     public String getID() {
         return ID;
     }

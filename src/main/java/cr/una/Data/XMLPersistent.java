@@ -50,8 +50,8 @@ public class XMLPersistent {
 
         for (int i = 0; i < lists.getMedidas().size(); i++) {
             MedidaDoc = doc.createElement("medida");
+            MedidasDoc.appendChild(MedidaDoc);
             Medida med = (Medida) lists.getMedidas().get(i);
-            rootElement.appendChild(MedidaDoc);
 
             dato = med.getID();
             Element id = doc.createElement("id");
@@ -71,7 +71,7 @@ public class XMLPersistent {
 
             CategoriaDoc = doc.createElement("categoria");
             Categoria cate = (Categoria) lists.getCategorias().get(i);
-            rootElement.appendChild(CategoriaDoc);
+            CategoriasDoc.appendChild(CategoriaDoc);
 
             dato = cate.getID();
             Element id = doc.createElement("id");

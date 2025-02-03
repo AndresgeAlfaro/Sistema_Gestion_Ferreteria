@@ -1,8 +1,6 @@
 package cr.una.Presentation.View;
 
-import cr.una.Logic.Articulo;
-import cr.una.Logic.Categoria;
-import cr.una.Logic.Subcategoria;
+import cr.una.Logic.*;
 import cr.una.Presentation.Controller.Controller;
 
 import javax.swing.*;
@@ -61,8 +59,8 @@ public class View {
     private JPanel ListArt;
     private JScrollPane ScrollPre;
     private JPanel ListPre;
-    private JTextField textField1;
-    private JTextField textField2;
+    private JTextField PrecioCompra;
+    private JTextField PrecioVenta;
 
     private boolean[] editar = {false,false,false,false};
 
@@ -70,9 +68,9 @@ public class View {
 
     private JButton[][] buttons = {{SaveCat,DelCat,SearchCat,ClearCat},{SaveSub,DelSub,SearchSub,ClearSub},{SaveArt,DelArt,SearchArt,ClearArt}};
 
-    private JPanel[] lists = {ListCat,ListSub,ListArt};
+    private JPanel[] lists = {ListCat,ListSub,ListArt,ListPre};
 
-    private JScrollPane[] ListScroll = {ScrollCat,ScrollSub,ScrollArt};
+    private JScrollPane[] ListScroll = {ScrollCat,ScrollSub,ScrollArt,ScrollPre};
 
     private JTextArea[] inputDes = {DesCat,DesSub,DesArt};
 
@@ -96,6 +94,51 @@ public class View {
         UIManager.put("ToolTip.border", new BorderUIResource(new LineBorder(
                 Color.BLACK)));
         TabPanel.updateUI();
+        CantPre.setBorder(null);
+        CantPre.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setAddPre();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setAddPre();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setAddPre();
+            }
+        });
+        PrecioCompra.setBorder(null);
+        PrecioCompra.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setAddPre();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setAddPre();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setAddPre();
+            }
+        });
+        PrecioVenta.setBorder(null);
+        PrecioVenta.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setAddPre();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setAddPre();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setAddPre();
+            }
+        });
         TabPanel.setEnabledAt(1,false);
         TabPanel.setEnabledAt(2,false);
         CatSub.setBorder(null);
@@ -324,6 +367,12 @@ public class View {
                 saveData(2);
             }
         });
+        SavePre.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveData(3);
+            }
+        });
         SearchCat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -363,6 +412,12 @@ public class View {
                 delete(2);
             }
         });
+        DelPre.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                delete(3);
+            }
+        });
         ClearCat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -381,26 +436,40 @@ public class View {
                 limpiar(2);
             }
         });
+        ClearPre.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                limpiarPre();
+            }
+        });
     }
     public void delete(int option) {
         try{
             switch (option) {
                 case 0:{
                     controller.deleteCategoria();
+                    limpiar(option);
                     break;
                 }
                 case 1:{
                     controller.deleteSubCategoria();
                     setDelete(0);
+                    limpiar(option);
                     break;
                 }
                 case 2:{
                     controller.deleteArticulo();
                     setDelete(1);
+                    limpiar(option);
+                    break;
+                }
+                case 3:{
+                    controller.deletePresentation();
+                    setDelete(2);
+                    limpiarPre();
                     break;
                 }
             }
-            limpiar(option);
             JOptionPane.showMessageDialog(mainPanel, "Eliminado con exito", "Información", JOptionPane.INFORMATION_MESSAGE);
             updateList(option);
         }
@@ -441,6 +510,10 @@ public class View {
                         }
                         case 2:{
                             selectArticulo(id);
+                            break;
+                        }
+                        case 3:{
+                            selectPresentacion(id);
                             break;
                         }
                     }
@@ -506,12 +579,50 @@ public class View {
             buttons[2][3].setBackground(new Color(29,95,254));
             updateList(2);
             setDelete(2);
-            //CatSub.setText(actual.getID());
-            //TabPanel.setEnabledAt(1, true);
-            //updateList(2);
+            setPresentation(true);
         }
         catch (Exception ex){
             JOptionPane.showMessageDialog(mainPanel, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    public void selectPresentacion(String id) {
+        try{
+            controller.editPresentacion(id);
+            Presentacion presentacion = controller.getCurrentPresentacion();
+            editar[3] = true;
+            ComboPre.setEnabled(false);
+            ComboPre.setSelectedIndex(Integer.parseInt(presentacion.getUnidad()));
+            CantPre.setText(presentacion.getCantidad());
+            PrecioCompra.setText(String.valueOf(presentacion.getCompra()));
+            PrecioVenta.setText(String.valueOf(presentacion.getVenta()));
+            ClearPre.setEnabled(true);
+            ClearPre.setBackground(new Color(29,95,254));
+            updateList(3);
+            DelPre.setEnabled(true);
+            DelPre.setBackground(new Color(29,95,254));
+        }
+        catch (Exception ex){
+            JOptionPane.showMessageDialog(mainPanel, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    public void setPresentation(boolean mode){
+        limpiarPre();
+        ComboPre.setEnabled(mode);
+        CantPre.setEnabled(mode);
+        PrecioCompra.setEnabled(mode);
+        PrecioVenta.setEnabled(mode);
+        if(mode){
+            List<Medida> medidas = controller.getMedidas();
+            for(Medida c : medidas){
+                ComboPre.addItem(c);
+            }
+            mainPanel.revalidate();
+            updateList(3);
+        }else{
+            ComboPre.removeAllItems();
+            lists[3].removeAll();
+            ListScroll[3].repaint();
+            ListScroll[3].validate();
         }
     }
     public void setDelete(int option) {
@@ -555,11 +666,11 @@ public class View {
             switch(option){
                 case 0:{
                     List<Categoria> lista = controller.getCategorias();
+
                     if(lista.size()<5){
                         minimum = 5-lista.size();
                     }
                     lists[option].setLayout(new GridLayout(lista.size() + minimum + 1, 4, 5, 5));
-
                     setTextList(option,"ID");
                     setTextList(option,"Nombre");
                     setTextList(option,"Descripcion");
@@ -570,7 +681,7 @@ public class View {
                         setTextInput(option,categoria.getDescripcion());
                         setButtonList(option, categoria.getID(), true);
                     }
-                    setOptionsPref(option,minimum);
+                    setOptionsPref(option,minimum,3);
                     break;
                 } case 1:{
                     List<Subcategoria> lista = controller.getCurrentCategoria().getSubcategorias();
@@ -578,7 +689,6 @@ public class View {
                         minimum = 5-lista.size();
                     }
                     lists[option].setLayout(new GridLayout(lista.size() + minimum + 1, 4, 5, 5));
-
                     setTextList(option,"ID");
                     setTextList(option,"Nombre");
                     setTextList(option,"Descripcion");
@@ -589,7 +699,7 @@ public class View {
                         setTextInput(option,subcategoria.getDescripcion());
                         setButtonList(option, subcategoria.getID(), true);
                     }
-                    setOptionsPref(option,minimum);
+                    setOptionsPref(option,minimum,3);
                     break;
                 }
                 case 2:{
@@ -609,7 +719,29 @@ public class View {
                         setTextInput(option,articulo.getDescripcion());
                         setButtonList(option, articulo.getID(), true);
                     }
-                    setOptionsPref(option,minimum);
+                    setOptionsPref(option,minimum,3);
+                    break;
+                }
+                case 3:{
+                    List<Presentacion> lista = controller.getCurrentArticulo().getPresentaciones();
+                    if(lista.size()<9){
+                        minimum = 9-lista.size();
+                    }
+                    lists[option].setLayout(new GridLayout(lista.size() + minimum + 1, 5, 5, 5));
+
+                    setTextList(option,"Unidad");
+                    setTextList(option,"Cantidad");
+                    setTextList(option,"Precio Compra");
+                    setTextList(option,"Precio Venta");
+                    setTextList(option,"");
+                    for(Presentacion presentacion : lista){
+                        setTextInput(option,controller.readMedida(presentacion.getUnidad()).getName());
+                        setTextInput(option,presentacion.getCantidad());
+                        setTextInput(option,String.valueOf(presentacion.getCompra())+'$');
+                        setTextInput(option,String.valueOf(presentacion.getVenta())+'$');
+                        setButtonList(option, presentacion.getUnidad(), true);
+                    }
+                    setOptionsPref(option,minimum, 4);
                     break;
                 }
             }
@@ -619,11 +751,11 @@ public class View {
             JOptionPane.showMessageDialog(mainPanel, er.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-    public void setOptionsPref(int option, int minimum){
+    public void setOptionsPref(int option, int minimum, int cant) {
         for (int i = 0; i < minimum; i++) {
-            setTextInput(option,"");
-            setTextInput(option,"");
-            setTextInput(option,"");
+            for (int j = 0; j < cant; j++) {
+                setTextInput(option,"");
+            }
             setButtonList(option,"",false);
         }
     }
@@ -699,6 +831,20 @@ public class View {
                     }
                     break;
                 }
+                case 3:{
+                    Medida medida = (Medida) ComboPre.getSelectedItem();
+                    Presentacion data = new Presentacion(medida.getID(), CantPre.getText(),Double.parseDouble(PrecioCompra.getText()),Double.parseDouble(PrecioVenta.getText()));
+                    if (editar[3]) {
+                        controller.editarPresentacion(data);
+                        JOptionPane.showMessageDialog(mainPanel, "Modificado con exito", "Información", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        controller.guardarPresentacion(data);
+                        JOptionPane.showMessageDialog(mainPanel, "Agregado con exito", "Información", JOptionPane.INFORMATION_MESSAGE);
+                        limpiarPre();
+                        setDelete(2);
+                    }
+                    break;
+                }
                 default:{
                     throw new Exception("Opcion no valida");
                 }
@@ -725,6 +871,22 @@ public class View {
         for (int i=0; i<=option; i++){
             TabPanel.setEnabledAt(i,true);
         }
+        setPresentation(false);
+    }
+    public void limpiarPre(){
+        ComboPre.setEnabled(true);
+        if(ComboPre.getItemCount()!=0){
+            ComboPre.setSelectedIndex(0);
+        }
+        CantPre.setText("");
+        CantPre.setEditable(true);
+        PrecioCompra.setText("");
+        PrecioVenta.setText("");
+        DelPre.setEnabled(false);
+        editar[3] = false;
+        DelPre.setBackground(new Color(36,39,44));
+        ClearPre.setEnabled(false);
+        ClearPre.setBackground(new Color(36,39,44));
     }
     public void setAdd(int option){
         if(!inputDes[option].getText().isEmpty()&&!inputs[option][0].getText().isEmpty()&&!inputs[option][1].getText().isEmpty()) {
@@ -733,6 +895,15 @@ public class View {
         }else{
             buttons[option][0].setEnabled(false);
             buttons[option][0].setBackground(new Color(51,55,66));
+        }
+    }
+    public void setAddPre(){
+        if(!CantPre.getText().isEmpty()&&!PrecioVenta.getText().isEmpty()&&!PrecioCompra.getText().isEmpty()) {
+            SavePre.setEnabled(true);
+            SavePre.setBackground(new Color(29,95,254));
+        }else{
+            SavePre.setEnabled(false);
+            SavePre.setBackground(new Color(36,39,44));
         }
     }
     public JPanel getmainPanel() {
@@ -760,6 +931,5 @@ public class View {
         ScrollArt.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10,10,10,10)));
         ScrollPre = new JScrollPane(ListPre);
         ScrollPre.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10,10,10,10)));
-
     }
 }
