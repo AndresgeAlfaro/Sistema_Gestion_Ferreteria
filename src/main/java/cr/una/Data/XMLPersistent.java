@@ -144,7 +144,7 @@ public class XMLPersistent {
                                     PresentacionDoc.appendChild(preUnidad);
 
                                     Element preCantidad = doc.createElement("cantidad");
-                                    preCantidad.appendChild(doc.createTextNode(PreList.get(iii).getCantidad()));
+                                    preCantidad.appendChild(doc.createTextNode(String.valueOf(PreList.get(iii).getCantidad())));
                                     PresentacionDoc.appendChild(preCantidad);
 
                                     Element preCompra = doc.createElement("compra");
@@ -154,6 +154,10 @@ public class XMLPersistent {
                                     Element preVenta = doc.createElement("venta");
                                     preVenta.appendChild(doc.createTextNode(String.valueOf(PreList.get(iii).getVenta())));
                                     PresentacionDoc.appendChild(preVenta);
+
+                                    Element cantVenta = doc.createElement("existencia");
+                                    cantVenta.appendChild(doc.createTextNode(String.valueOf(PreList.get(iii).getExistencia())));
+                                    PresentacionDoc.appendChild(cantVenta);
                                 }
                                 ArticuloDoc.appendChild(PresentacionesDoc);
                             }
@@ -246,9 +250,10 @@ public class XMLPersistent {
                                     if(NodeA.getNodeType()==Node.ELEMENT_NODE){
                                         Element presentacionEl = (Element) NodeA;
                                         Presentacion presentacion =new Presentacion(presentacionEl.getElementsByTagName("unidad").item(0).getTextContent(),
-                                                presentacionEl.getElementsByTagName("cantidad").item(0).getTextContent(),
+                                                Double.parseDouble(presentacionEl.getElementsByTagName("cantidad").item(0).getTextContent()),
                                                 Double.parseDouble(presentacionEl.getElementsByTagName("compra").item(0).getTextContent()),
-                                                Double.parseDouble(presentacionEl.getElementsByTagName("venta").item(0).getTextContent()));
+                                                Double.parseDouble(presentacionEl.getElementsByTagName("venta").item(0).getTextContent()),
+                                                Integer.parseInt (presentacionEl.getElementsByTagName("existencia").item(0).getTextContent()));
                                         presentaciones.add(presentacion);
                                     }
                                 }

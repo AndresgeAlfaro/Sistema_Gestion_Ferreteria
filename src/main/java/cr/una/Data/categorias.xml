@@ -131,6 +131,15 @@
                             <id>3.1.1</id>
                             <nombre>Pintura Blanca</nombre>
                             <descripcion>Galón de pintura blanca mate</descripcion>
+                            <presentaciones>
+                                <presentacion>
+                                    <unidad>0</unidad>
+                                    <cantidad>10.5</cantidad>
+                                    <compra>100.0</compra>
+                                    <venta>200.0</venta>
+                                    <existencia>10</existencia>
+                                </presentacion>
+                            </presentaciones>
                         </articulo>
                         <articulo>
                             <id>3.1.2</id>

@@ -71,7 +71,7 @@ public class Service {
     }
     public Presentacion readPresentacion(Articulo articulo, Presentacion presentacion){ //CAMBIAR A PROBLEMA DE EXAMEN
         Presentacion result = articulo.getPresentaciones().stream()
-                .filter((i->i.getUnidad().equals(presentacion.getUnidad()))).findFirst().orElse(null);
+                .filter((i->i.getUnidad().equals(presentacion.getUnidad())&&i.getCantidad()==presentacion.getCantidad())).findFirst().orElse(null);
         return result;
     }
     public void guardarCategoria(Categoria categoria) throws Exception {
@@ -196,32 +196,64 @@ public class Service {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,sub);
         if(b == null) throw new Exception("No existe una subCategoria registrada con ese código");
+        int index=data.getCategorias().indexOf(a);
         data.getCategorias().remove(a);
         a.getSubcategorias().remove(b);
-        data.getCategorias().add(a);
+        data.getCategorias().add(index,a);
     }
     public void deleteArticulo(Categoria cat, Subcategoria sub, Articulo art) throws Exception {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,sub);
         Articulo c = readArticulo(b,art);
         if(c == null) throw new Exception("No existe un articulo registrado con ese código");
+        int index=data.getCategorias().indexOf(a);
         data.getCategorias().remove(a);
+        int index2=a.getSubcategorias().indexOf(b);
         a.getSubcategorias().remove(b);
         b.getArticulos().remove(c);
-        a.getSubcategorias().add(b);
-        data.getCategorias().add(a);
+        a.getSubcategorias().add(index2,b);
+        data.getCategorias().add(index,a);
     }
     public void deletePresentation(Categoria cat, Subcategoria sub, Articulo art,Presentacion pre) throws Exception {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,sub);
         Articulo c = readArticulo(b,art);
         if(c == null) throw new Exception("No existe una presentacion registrada con esos datos");
+        int index=data.getCategorias().indexOf(a);
         data.getCategorias().remove(a);
+        int index2=a.getSubcategorias().indexOf(b);
         a.getSubcategorias().remove(b);
+        int index3=b.getArticulos().indexOf(c);
         b.getArticulos().remove(c);
         c.getPresentaciones().remove(pre);
-        b.getArticulos().add(c);
-        a.getSubcategorias().add(b);
-        data.getCategorias().add(a);
+        b.getArticulos().add(index3,c);
+        a.getSubcategorias().add(index2,b);
+        data.getCategorias().add(index,a);
+    }
+    public void reduceExistences(List<Factura> facturas) throws Exception {
+        for (Factura f : facturas) {
+            Categoria a = readCategoria(f.getCategoria());
+            Subcategoria b = readSubCategoria(a,f.getSubcategoria());
+            Articulo c = readArticulo(b,f.getArticulo());
+            Presentacion d = readPresentacion(c,f.getPresentacion());
+            f.getPresentacion().setExistencia(f.getPresentacion().getExistencia()-f.getCantidad());
+            if (f.getPresentacion().getExistencia() < 0) {
+                throw new Exception("No existe suficiente existencias");
+            }
+            if(a == null) throw new Exception("No existe una presentacion registrada con esos datos");
+            else{
+                int index=data.getCategorias().indexOf(a);
+                data.getCategorias().remove(a);
+                int index2 = a.getSubcategorias().indexOf(b);
+                a.getSubcategorias().remove(b);
+                int index3 = b.getArticulos().indexOf(c);
+                b.getArticulos().remove(c);
+                int index4 = c.getPresentaciones().indexOf(d);
+                c.getPresentaciones().set(index4, f.getPresentacion());
+                b.getArticulos().add(index3,c);
+                a.getSubcategorias().add(index2,b);
+                data.getCategorias().add(index,a);
+            }
+        }
     }
 }

@@ -23,6 +23,9 @@ public class Subcategoria {
         this.descripcion = descripcion;
     }
 
+    @Override
+    public String toString() {return nombre;}
+
     public String getDescripcion() {
         return descripcion;
     }

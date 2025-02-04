@@ -22,6 +22,7 @@ public class Controller {
         view.setController(this);
         model.init(Service.instance().getCategorias(), Service.instance().getMedidas());
         this.view.updateList(0);
+        this.view.activeBox(0);
     }
     public void guardarCategoria(Categoria categoria) throws Exception {
         Service.instance().guardarCategoria(categoria);
@@ -110,7 +111,7 @@ public class Controller {
         model.setCurrentCategoria(model.readCategorias(model.getCurrentCategoria().getID()));
         model.setCurrentSubCategoria(model.readSubCategorias(model.getCurrentSubCategoria().getID()));
         model.setCurrentArticulo(model.readArticulos(model.getCurrentArticulo().getID()));
-        model.setCurrentPresentacion(model.readPresentaciones(activo.getUnidad()));
+        model.setCurrentPresentacion(model.readPresentaciones(activo.getUnidad()+'|'+activo.getCantidad()));
     }
     public void deleteCategoria() throws Exception {
         Service.instance().deleteCategoria(model.getCurrentCategoria());
@@ -133,5 +134,31 @@ public class Controller {
     }
     public List<Categoria> getCategorias() {
         return model.getCategorias();
+    }
+    public List<Subcategoria> getSubcategorias(Categoria activo) {
+        return model.getSubcategorias(activo);
+    }
+    public List<Articulo> getArticulos(Subcategoria activo) {
+        return model.getArticulos(activo);
+    }
+    public List<Presentacion> getPresentaciones(Articulo activo) {
+        return model.getPresentaciones(activo);
+    }
+    public void addItemFact(Factura fact) throws Exception {
+        model.addItemFactura(fact);
+    }
+    public void clearFactura(){
+        model.clearFactura();
+    }
+    public List<Factura> getFacturas() {
+        return model.getFacturas();
+    }
+    public void deleteItemFactura(String id){
+        model.deleteItemFactura(id);
+    }
+    public void billing() throws Exception {
+        Service.instance().reduceExistences(model.getFacturas());
+        model.clearFactura();
+        model.setCategorias(Service.instance().getCategorias());
     }
 }
