@@ -23,6 +23,9 @@ public class Articulo {
         this.descripcion = descripcion;
     }
 
+    @Override
+    public String toString() {return nombre;}
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -33,6 +36,10 @@ public class Articulo {
 
     public List<Presentacion> getPresentaciones() {
         return presentaciones;
+    }
+
+    public void setPresentaciones(List<Presentacion> presentaciones) {
+        this.presentaciones = presentaciones;
     }
 
     public String getID() {

@@ -2,14 +2,16 @@ package cr.una.Presentation.Controller;
 
 import cr.una.Logic.*;
 import cr.una.Presentation.Model.Model;
-import cr.una.Presentation.View.mainView;
+import cr.una.Presentation.View.View;
+
+import java.util.List;
 
 
 public class Controller {
     private Model model;
-    private mainView view;
+    private View view;
 
-    public void startAplication(mainView view) {
+    public void startAplication(View view) {
         try{
             Service.instance().cargarXML();
         }catch (Exception ex){
@@ -18,8 +20,9 @@ public class Controller {
         model = new Model();
         this.view = view;
         view.setController(this);
-        model.init(Service.instance().getCategorias());
-        this.view.actualizarListaCategoria();
+        model.init(Service.instance().getCategorias(), Service.instance().getMedidas());
+        this.view.updateList(0);
+        this.view.activeBox(0);
     }
     public void guardarCategoria(Categoria categoria) throws Exception {
         Service.instance().guardarCategoria(categoria);
@@ -58,6 +61,19 @@ public class Controller {
         }
         model.setCurrentArticulo(a);
     }
+    public void editPresentacion(String cod) throws Exception {
+        Presentacion a = model.readPresentaciones(cod);
+        if(a== null){
+            throw new Exception("No hay Presentaciones registradas con ese código");
+        }
+        model.setCurrentPresentacion(a);
+    }
+    public List<Medida> getMedidas() {
+        return model.getMedidas();
+    }
+    public Medida readMedida(String cod) {
+        return  model.readMedida(cod);
+    }
     public Categoria getCurrentCategoria() {
         return model.getCurrentCategoria();
     }
@@ -95,7 +111,7 @@ public class Controller {
         model.setCurrentCategoria(model.readCategorias(model.getCurrentCategoria().getID()));
         model.setCurrentSubCategoria(model.readSubCategorias(model.getCurrentSubCategoria().getID()));
         model.setCurrentArticulo(model.readArticulos(model.getCurrentArticulo().getID()));
-        model.setCurrentPresentacion(model.readPResentaciones(activo.getUnidad(), activo.getCantidad()));
+        model.setCurrentPresentacion(model.readPresentaciones(activo.getUnidad()+'|'+activo.getCantidad()));
     }
     public void deleteCategoria() throws Exception {
         Service.instance().deleteCategoria(model.getCurrentCategoria());
@@ -112,50 +128,37 @@ public class Controller {
         model.setCategorias(Service.instance().getCategorias());
         model.setCurrentArticulo(null);
     }
-    public void deletePresentation(int index) throws Exception {
-        Service.instance().deletePresentation(model.getCurrentCategoria(),model.getCurrentSubCategoria(),model.getCurrentArticulo(),index);
+    public void deletePresentation() throws Exception {
+        Service.instance().deletePresentation(model.getCurrentCategoria(),model.getCurrentSubCategoria(),model.getCurrentArticulo(),model.getCurrentPresentacion());
         model.setCategorias(Service.instance().getCategorias());
     }
-    public Categoria getCategoria(int index){
-        return model.getCategorias().get(index);
+    public List<Categoria> getCategorias() {
+        return model.getCategorias();
     }
-    public Subcategoria getSubCategoria(int index){
-        Categoria c = getCurrentCategoria();
-        return c.getSubcategorias().get(index);
+    public List<Subcategoria> getSubcategorias(Categoria activo) {
+        return model.getSubcategorias(activo);
     }
-    public Articulo getArticulos(int index){
-        Subcategoria c = getCurrentSubcategoria();
-        return c.getArticulos().get(index);
+    public List<Articulo> getArticulos(Subcategoria activo) {
+        return model.getArticulos(activo);
     }
-    public Presentacion getPresentaciones(int index){
-        Articulo c = getCurrentArticulo();
-        return c.getPresentaciones().get(index);
+    public List<Presentacion> getPresentaciones(Articulo activo) {
+        return model.getPresentaciones(activo);
     }
-    public int getCategoriasSize(){
-        return model.getCategorias().size();
+    public void addItemFact(Factura fact) throws Exception {
+        model.addItemFactura(fact);
     }
-    public int getSubCategoriasSize(){
-        Categoria c = getCurrentCategoria();
-        return c.getSubcategorias().size();
+    public void clearFactura(){
+        model.clearFactura();
     }
-    public int getArticulosSize(){
-        Subcategoria c = getCurrentSubcategoria();
-        return c.getArticulos().size();
+    public List<Factura> getFacturas() {
+        return model.getFacturas();
     }
-    public int getPresentacionSize(){
-        Articulo c = getCurrentArticulo();
-        return c.getPresentaciones().size();
+    public void deleteItemFactura(String id){
+        model.deleteItemFactura(id);
     }
-    public void resetCurrentCategoria(){
-        model.setCurrentCategoria(null);
-    }
-    public void resetCurrentSubCategoria(){
-        model.setCurrentSubCategoria(null);
-    }
-    public void resetCurrentArticulo(){
-        model.setCurrentArticulo(null);
-    }
-    public void resetCurrentPresentacion(){
-        model.setCurrentArticulo(null);
+    public void billing() throws Exception {
+        Service.instance().reduceExistences(model.getFacturas());
+        model.clearFactura();
+        model.setCategorias(Service.instance().getCategorias());
     }
 }

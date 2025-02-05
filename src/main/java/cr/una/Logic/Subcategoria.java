@@ -23,6 +23,9 @@ public class Subcategoria {
         this.descripcion = descripcion;
     }
 
+    @Override
+    public String toString() {return nombre;}
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -33,6 +36,10 @@ public class Subcategoria {
 
     public List<Articulo> getArticulos() {
         return articulos;
+    }
+
+    public void setArticulos(List<Articulo> articulos) {
+        this.articulos = articulos;
     }
 
     public String getID() {

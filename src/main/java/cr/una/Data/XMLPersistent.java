@@ -1,9 +1,6 @@
 package cr.una.Data;
 
-import cr.una.Logic.Categoria;
-import cr.una.Logic.Subcategoria;
-import cr.una.Logic.Articulo;
-import cr.una.Logic.Presentacion;
+import cr.una.Logic.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -24,16 +21,20 @@ import java.util.List;
 public class XMLPersistent {
 
     private String filesource = "./src/main/java/cr/una/Data/categorias.xml";
-//    private String filesource = "C:\\Users\\andre\\Documents\\JAVA\\PROGRA 3 VERANO\\Sistema_Gestion_Ferreteria-master\\Sistema_Gestion_Ferreteria-master\\src\\main\\java\\cr\\una\\Data\\categorias.xml"; // para Andres
+    //private String filesource = "C:\\Users\\andre\\Documents\\JAVA\\PROGRA 3 VERANO\\Sistema_Gestion_Ferreteria-master\\Sistema_Gestion_Ferreteria-master\\src\\main\\java\\cr\\una\\Data\\categorias.xml"; // para Andres
     public void guardarXML(Data lists) throws ParserConfigurationException, TransformerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         //Elemento raíz
         Document doc = docBuilder.newDocument();
-        Element rootElement = doc.createElement("categorias");
+        Element rootElement = doc.createElement("inventario");
         doc.appendChild(rootElement);
         // Creo los elementos
+        Element MedidasDoc;
+        Element MedidaDoc;
+
+        Element CategoriasDoc;
         Element CategoriaDoc;
         Element SubCategoriasDoc;
         Element SubCategoriaDoc;
@@ -42,11 +43,35 @@ public class XMLPersistent {
         Element PresentacionesDoc;
         Element PresentacionDoc;
         String dato;
+
+
+        MedidasDoc = doc.createElement("medidas");
+        rootElement.appendChild(MedidasDoc);
+
+        for (int i = 0; i < lists.getMedidas().size(); i++) {
+            MedidaDoc = doc.createElement("medida");
+            MedidasDoc.appendChild(MedidaDoc);
+            Medida med = (Medida) lists.getMedidas().get(i);
+
+            dato = med.getID();
+            Element id = doc.createElement("id");
+            id.appendChild(doc.createTextNode(dato));
+            MedidaDoc.appendChild(id);
+
+            dato = med.getName();
+            Element nombre = doc.createElement("nombre");
+            nombre.appendChild(doc.createTextNode(dato));
+            MedidaDoc.appendChild(nombre);
+        }
+
+        CategoriasDoc = doc.createElement("categorias");
+        rootElement.appendChild(CategoriasDoc);
+
         for (int i = 0; i < lists.getCategorias().size(); i++) { // categorias
 
             CategoriaDoc = doc.createElement("categoria");
             Categoria cate = (Categoria) lists.getCategorias().get(i);
-            rootElement.appendChild(CategoriaDoc);
+            CategoriasDoc.appendChild(CategoriaDoc);
 
             dato = cate.getID();
             Element id = doc.createElement("id");
@@ -119,8 +144,20 @@ public class XMLPersistent {
                                     PresentacionDoc.appendChild(preUnidad);
 
                                     Element preCantidad = doc.createElement("cantidad");
-                                    preCantidad.appendChild(doc.createTextNode(PreList.get(iii).getCantidad()));
+                                    preCantidad.appendChild(doc.createTextNode(String.valueOf(PreList.get(iii).getCantidad())));
                                     PresentacionDoc.appendChild(preCantidad);
+
+                                    Element preCompra = doc.createElement("compra");
+                                    preCompra.appendChild(doc.createTextNode(String.valueOf(PreList.get(iii).getCompra())));
+                                    PresentacionDoc.appendChild(preCompra);
+
+                                    Element preVenta = doc.createElement("venta");
+                                    preVenta.appendChild(doc.createTextNode(String.valueOf(PreList.get(iii).getVenta())));
+                                    PresentacionDoc.appendChild(preVenta);
+
+                                    Element cantVenta = doc.createElement("existencia");
+                                    cantVenta.appendChild(doc.createTextNode(String.valueOf(PreList.get(iii).getExistencia())));
+                                    PresentacionDoc.appendChild(cantVenta);
                                 }
                                 ArticuloDoc.appendChild(PresentacionesDoc);
                             }
@@ -145,6 +182,7 @@ public class XMLPersistent {
 
     public Data cargarXML() throws ParserConfigurationException, IOException, SAXException, Exception {
 
+        List<Medida> listaDeMedidas = new ArrayList<>();
         List<Categoria> listaDeCategorias = new ArrayList<>();
 
 
@@ -155,6 +193,24 @@ public class XMLPersistent {
         Document doc = db.parse(new File(filesource)); //CAMBIAR
 
         doc.getDocumentElement().normalize();
+
+        //==========================================Medidas====================================
+
+        NodeList listaMedidas = doc.getElementsByTagName("medida");
+
+        for (int i = 0; i < listaMedidas.getLength(); i++) {
+            Node c = listaMedidas.item(i);
+            if (c.getNodeType() == Node.ELEMENT_NODE) {
+                Element medidaEl = (Element) c;
+
+                //obtenemos los datos del objeto
+                String codigo = medidaEl.getElementsByTagName("id").item(0).getTextContent();
+                String nombre = medidaEl.getElementsByTagName("nombre").item(0).getTextContent();
+
+                Medida medida = new Medida(codigo, nombre);
+                listaDeMedidas.add(medida);
+            }
+        }
 
         //==========================================Categorias====================================
 
@@ -194,7 +250,10 @@ public class XMLPersistent {
                                     if(NodeA.getNodeType()==Node.ELEMENT_NODE){
                                         Element presentacionEl = (Element) NodeA;
                                         Presentacion presentacion =new Presentacion(presentacionEl.getElementsByTagName("unidad").item(0).getTextContent(),
-                                                presentacionEl.getElementsByTagName("cantidad").item(0).getTextContent());
+                                                Double.parseDouble(presentacionEl.getElementsByTagName("cantidad").item(0).getTextContent()),
+                                                Double.parseDouble(presentacionEl.getElementsByTagName("compra").item(0).getTextContent()),
+                                                Double.parseDouble(presentacionEl.getElementsByTagName("venta").item(0).getTextContent()),
+                                                Integer.parseInt (presentacionEl.getElementsByTagName("existencia").item(0).getTextContent()));
                                         presentaciones.add(presentacion);
                                     }
                                 }
@@ -221,6 +280,7 @@ public class XMLPersistent {
         }
         Data datos = new Data();
         datos.setCategorias(listaDeCategorias);
+        datos.setMedidas(listaDeMedidas);
         return datos;
     }
 }
