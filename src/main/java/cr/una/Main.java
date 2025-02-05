@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
+//hola como esatas
 public class Main {
     private static Controller main;
     private static JFrame window;
