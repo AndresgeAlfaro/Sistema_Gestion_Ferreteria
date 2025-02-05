@@ -21,6 +21,7 @@ import java.util.List;
 public class XMLPersistent {
 
     private String filesource = "./src/main/java/cr/una/Data/categorias.xml";
+    private String usuariosPath = "./src/main/java/cr/una/Data/users.xml";
     //private String filesource = "C:\\Users\\andre\\Documents\\JAVA\\PROGRA 3 VERANO\\Sistema_Gestion_Ferreteria-master\\Sistema_Gestion_Ferreteria-master\\src\\main\\java\\cr\\una\\Data\\categorias.xml"; // para Andres
     public void guardarXML(Data lists) throws ParserConfigurationException, TransformerException {
 
@@ -185,7 +186,6 @@ public class XMLPersistent {
         List<Medida> listaDeMedidas = new ArrayList<>();
         List<Categoria> listaDeCategorias = new ArrayList<>();
 
-
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 
@@ -281,6 +281,37 @@ public class XMLPersistent {
         Data datos = new Data();
         datos.setCategorias(listaDeCategorias);
         datos.setMedidas(listaDeMedidas);
+
+        //Usuarios
+
+        List<User> listaDeUsuarios = new ArrayList<>();
+
+        dbf = DocumentBuilderFactory.newInstance();
+        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+        db = dbf.newDocumentBuilder();
+        doc = db.parse(new File(usuariosPath));
+
+        doc.getDocumentElement().normalize();
+
+        NodeList ListaUsers = doc.getElementsByTagName("user");
+
+        for (int i = 0; i < ListaUsers.getLength(); i++) {
+            Node lu = ListaUsers.item(i);
+            if (lu.getNodeType() == Node.ELEMENT_NODE) {
+                Element userEl = (Element) lu;
+
+                String username = userEl.getElementsByTagName("username").item(0).getTextContent();
+                String password = userEl.getElementsByTagName("password").item(0).getTextContent();
+                String active = userEl.getElementsByTagName("active").item(0).getTextContent();
+
+                User user = new User(username, password, active);
+                listaDeUsuarios.add(user);
+            }
+        }
+
+        datos.setUsers(listaDeUsuarios);
+        //
         return datos;
     }
 }

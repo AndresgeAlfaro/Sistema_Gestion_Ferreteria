@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<users>
+    <user>
+        <username>JohnDoe</username>
+        <password>MyP455W04D</password>
+        <active>Activo</active>
+    </user>
+    <user>
+        <username>JaneDoe</username>
+        <password>qiAqv547Q#$</password>
+        <active>Bloqueado</active>
+    </user>
+    <user>
+        <username>JuanPerez</username>
+        <password>AnyPassword</password>
+        <active>Activo</active>
+    </user>
+</users>
