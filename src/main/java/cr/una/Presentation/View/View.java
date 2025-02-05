@@ -781,7 +781,7 @@ public class View {
             setDelete(0);
             CatSub.setText(actual.getID());
             CatArt .setText(actual.getID());
-            TabPanel.setEnabledAt(1, true);
+            TabPanel.setEnabledAt(2, true);
             updateList(1);
             limpiar(1);
         }

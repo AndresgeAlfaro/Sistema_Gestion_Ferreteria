@@ -311,7 +311,7 @@ public class XMLPersistent {
         }
 
         datos.setUsers(listaDeUsuarios);
-        //
+
         return datos;
     }
 }
