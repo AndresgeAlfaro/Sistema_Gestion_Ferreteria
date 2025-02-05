@@ -31,6 +31,9 @@ public class XMLPersistent {
         Element rootElement = doc.createElement("inventario");
         doc.appendChild(rootElement);
         // Creo los elementos
+        Element UsuariosDoc;
+        Element UsuarioDoc;
+
         Element MedidasDoc;
         Element MedidaDoc;
 
@@ -44,6 +47,30 @@ public class XMLPersistent {
         Element PresentacionDoc;
         String dato;
 
+        UsuariosDoc = doc.createElement("usuarios");
+        rootElement.appendChild(UsuariosDoc);
+
+        for(int i=0;i<lists.getUsuarios().size();i++){
+            UsuarioDoc = doc.createElement("usuario");
+            UsuariosDoc.appendChild(UsuarioDoc);
+            User user = lists.getUsuarios().get(i);
+
+            dato=user.getUsername();
+            Element username = doc.createElement("username");
+            username.appendChild(doc.createTextNode(dato));
+            UsuarioDoc.appendChild(username);
+
+            dato=user.getPassword();
+            Element password = doc.createElement("password");
+            password.appendChild(doc.createTextNode(dato));
+            UsuarioDoc.appendChild(password);
+
+            dato=user.getState();
+            Element state = doc.createElement("state");
+            state.appendChild(doc.createTextNode(dato));
+            UsuarioDoc.appendChild(state);
+        }
+
 
         MedidasDoc = doc.createElement("medidas");
         rootElement.appendChild(MedidasDoc);
@@ -51,7 +78,7 @@ public class XMLPersistent {
         for (int i = 0; i < lists.getMedidas().size(); i++) {
             MedidaDoc = doc.createElement("medida");
             MedidasDoc.appendChild(MedidaDoc);
-            Medida med = (Medida) lists.getMedidas().get(i);
+            Medida med = lists.getMedidas().get(i);
 
             dato = med.getID();
             Element id = doc.createElement("id");
@@ -70,7 +97,7 @@ public class XMLPersistent {
         for (int i = 0; i < lists.getCategorias().size(); i++) { // categorias
 
             CategoriaDoc = doc.createElement("categoria");
-            Categoria cate = (Categoria) lists.getCategorias().get(i);
+            Categoria cate =  lists.getCategorias().get(i);
             CategoriasDoc.appendChild(CategoriaDoc);
 
             dato = cate.getID();
@@ -184,6 +211,7 @@ public class XMLPersistent {
 
         List<Medida> listaDeMedidas = new ArrayList<>();
         List<Categoria> listaDeCategorias = new ArrayList<>();
+        List<User> listaDeUsuarios = new ArrayList<>();
 
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -193,6 +221,27 @@ public class XMLPersistent {
         Document doc = db.parse(new File(filesource)); //CAMBIAR
 
         doc.getDocumentElement().normalize();
+
+        //==========================================Usuarios====================================
+
+        NodeList listaUsers = doc.getElementsByTagName("usuario");
+
+        for (int i = 0; i < listaUsers.getLength(); i++) {
+            Node c = listaUsers.item(i);
+            if (c.getNodeType() == Node.ELEMENT_NODE) {
+                Element userEl = (Element) c;
+
+                //obtenemos los datos del objeto
+                String username = userEl.getElementsByTagName("username").item(0).getTextContent();
+                String password = userEl.getElementsByTagName("password").item(0).getTextContent();
+                String state = userEl.getElementsByTagName("state").item(0).getTextContent();
+
+
+                User user = new User(username, password, state);
+                listaDeUsuarios.add(user);
+            }
+        }
+
 
         //==========================================Medidas====================================
 
@@ -281,6 +330,7 @@ public class XMLPersistent {
         Data datos = new Data();
         datos.setCategorias(listaDeCategorias);
         datos.setMedidas(listaDeMedidas);
+        datos.setUsuarios(listaDeUsuarios);
         return datos;
     }
 }

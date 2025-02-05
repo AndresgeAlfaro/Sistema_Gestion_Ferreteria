@@ -2,6 +2,7 @@ package cr.una.Data;
 
 import cr.una.Logic.Categoria;
 import cr.una.Logic.Medida;
+import cr.una.Logic.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ public class Data {
 
     private List<Medida> medidas;
     private List<Categoria> Categorias;
+    private List<User> usuarios;
 
     public Data() //Constructor
     {
@@ -29,5 +31,12 @@ public class Data {
 
     public void setMedidas(List<Medida> medidas) {
         this.medidas = medidas;
+    }
+
+    public List<User> getUsuarios() {
+        return usuarios;
+    }
+    public void setUsuarios(List<User> usuarios) {
+        this.usuarios = usuarios;
     }
 }

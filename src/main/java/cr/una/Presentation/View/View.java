@@ -16,6 +16,8 @@ import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class View {
@@ -91,7 +93,29 @@ public class View {
 
     private Controller controller;
 
+    private JFrame window;
+
     public View() {
+        window = new JFrame();
+        window.setContentPane(mainPanel);
+        window.setSize(1200, 710);
+        window.setLocationRelativeTo(null);
+        window.setResizable(false);
+        //window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        window.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try{
+                    Service.instance().guardarXML();
+                    controller.starLogin();
+
+                }catch (Exception ex){
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Información", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        window.setTitle("Sistema de Gestion de Ferreteria");
+        window.setVisible(true);
         UIManager.put("TabbedPane.contentBorderInsets", new InsetsUIResource(1, 0,
                 0, 0));
         UIManager.put("TabbedPane.contentAreaColor", new ColorUIResource(
