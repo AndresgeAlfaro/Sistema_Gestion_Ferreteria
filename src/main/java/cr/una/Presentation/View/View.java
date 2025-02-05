@@ -74,6 +74,9 @@ public class View {
     private JScrollPane ScrollPed;
     private JPanel ListPed;
     private JTextField CantUnidad;
+    private JTextField inputUser;
+    private JPasswordField inputPass;
+    private JButton Login;
 
     private boolean[] editar = {false,false,false,false};
 
