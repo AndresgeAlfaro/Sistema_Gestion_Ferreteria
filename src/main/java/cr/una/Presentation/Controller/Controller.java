@@ -20,7 +20,7 @@ public class Controller {
         model = new Model();
         this.view = view;
         view.setController(this);
-        model.init(Service.instance().getCategorias(), Service.instance().getMedidas());
+        model.init(Service.instance().getCategorias(), Service.instance().getMedidas(), Service.instance().getUsers());
         this.view.updateList(0);
         this.view.activeBox(0);
     }
@@ -160,5 +160,21 @@ public class Controller {
         Service.instance().reduceExistences(model.getFacturas());
         model.clearFactura();
         model.setCategorias(Service.instance().getCategorias());
+    }
+
+    public boolean Login(String username, String password) throws Exception {
+        for (User u : Service.instance().getUsers()) {
+            if (u.getUsername().equals(username)) {
+                if (u.getPassword().equals(password)) {
+                    if(u.isActive()){
+                        model.setCurrentUser(u);
+                        return true;
+                    }
+                    throw new Exception("Usuario bloqueado");
+                }
+                throw new Exception("Contraseña incorrecta");
+            }
+        }
+        return false;
     }
 }

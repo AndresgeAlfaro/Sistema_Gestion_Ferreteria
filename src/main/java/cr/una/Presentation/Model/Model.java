@@ -13,13 +13,17 @@ public class Model {
     private Articulo currentArticulo;
     private Presentacion currentPresentacion;
 
+    private List<User> Users;
+    private User currentUser;
+
     private List<Factura> facturas;
 
-    public void init(List<Categoria> c, List<Medida> a){
+    public void init(List<Categoria> c, List<Medida> a, List<User> u){
         facturas = new ArrayList<Factura>();
         setCategorias(c);
         currentCategoria = new Categoria();
         setMedidas(a);
+        Users = u;
     }
 
 
@@ -37,6 +41,10 @@ public class Model {
     public List<Presentacion> getPresentaciones(Articulo activo) {
         return activo.getPresentaciones();
     }
+
+    public List<User> getUsers() { return Users; }
+    public User getCurrentUser() { return currentUser; }
+    public void setCurrentUser(User user) { currentUser = user; }
 
     public void setCategorias(List<Categoria> categorias) {
         this.categorias = categorias;

@@ -77,6 +77,7 @@ public class View {
     private JTextField inputUser;
     private JPasswordField inputPass;
     private JButton Login;
+    private JButton Logout;
 
     private boolean[] editar = {false,false,false,false};
 
@@ -186,6 +187,7 @@ public class View {
         });
         TabPanel.setEnabledAt(1,false);
         TabPanel.setEnabledAt(2,false);
+        TabPanel.setEnabledAt(3,false);
         CatSub.setBorder(null);
         CatArt.setBorder(null);
         SubArt.setBorder(null);
@@ -560,6 +562,42 @@ public class View {
                 catch (Exception ex){
                     JOptionPane.showMessageDialog(mainPanel, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        });
+        Logout.setEnabled(false);
+        Login.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    if(inputUser.getText().isEmpty() || new String(inputPass.getPassword()).isEmpty()){
+                        throw new Exception("Campos vacios");
+                    }
+                    if(controller.Login(inputUser.getText(), new String(inputPass.getPassword()))){
+                        inputUser.setEnabled(false);
+                        inputPass.setEnabled(false);
+                        TabPanel.setEnabledAt(1, true);
+                        Login.setEnabled(false);
+                        Logout.setEnabled(true);
+                    }else{
+                        throw new Exception("Usuario no encontrado");
+                    }
+                }catch (Exception ex) {
+                    JOptionPane.showMessageDialog(mainPanel, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+        Logout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TabPanel.setEnabledAt(1, false);
+                TabPanel.setEnabledAt(2, false);
+                TabPanel.setEnabledAt(3, false);
+                Login.setEnabled(true);
+                Logout.setEnabled(false);
+                inputUser.setEnabled(true);
+                inputPass.setEnabled(true);
+                inputUser.setText("");
+                inputPass.setText("");
             }
         });
     }
