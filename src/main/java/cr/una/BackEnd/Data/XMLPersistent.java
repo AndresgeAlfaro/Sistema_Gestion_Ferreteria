@@ -1,6 +1,6 @@
-package cr.una.Data;
+package cr.una.BackEnd.Data;
 
-import cr.una.Logic.*;
+import cr.una.BackEnd.Logic.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -20,8 +20,8 @@ import java.util.List;
 
 public class XMLPersistent {
 
-    private String filesource = "./src/main/java/cr/una/Data/categorias.xml";
-    //private String filesource = "C:\\Users\\andre\\Downloads\\Sistema_Gestion_Ferreteria-omar\\Sistema_Gestion_Ferreteria-omar\\src\\main\\java\\cr\\una\\Data\\categorias.xml"; // para Andres
+    //private String filesource = ".src/main/java/cr/una/BackEnd/Data/categorias.xml";
+    private String filesource = "C:\\Users\\andre\\Documents\\JAVA\\PROGRA 3 VERANO\\Sistema_Gestion_Ferreteria\\src\\main\\java\\cr\\una\\BackEnd\\Data\\categorias.xml"; // para Andres
     public void guardarXML(Data lists) throws ParserConfigurationException, TransformerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();

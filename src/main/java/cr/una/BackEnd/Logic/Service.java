@@ -1,7 +1,7 @@
-package cr.una.Logic;
+package cr.una.BackEnd.Logic;
 
-import cr.una.Data.Data;
-import cr.una.Data.XMLPersistent;
+import cr.una.BackEnd.Data.Data;
+import cr.una.BackEnd.Data.XMLPersistent;
 
 import org.xml.sax.SAXException;
 
@@ -9,7 +9,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingDeque;
 
 public class Service {
     private static Service theInstance;

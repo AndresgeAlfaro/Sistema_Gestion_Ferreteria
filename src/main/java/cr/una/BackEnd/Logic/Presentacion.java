@@ -1,7 +1,4 @@
-package cr.una.Logic;
-
-import java.util.ArrayList;
-import java.util.List;
+package cr.una.BackEnd.Logic;
 
 public class Presentacion {
     private String unidad;

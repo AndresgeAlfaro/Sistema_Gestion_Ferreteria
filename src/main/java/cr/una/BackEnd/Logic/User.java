@@ -1,4 +1,4 @@
-package cr.una.Logic;
+package cr.una.BackEnd.Logic;
 
 public class User {
     private String username;

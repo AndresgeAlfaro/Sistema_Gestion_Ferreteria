@@ -198,5 +198,33 @@
                 </subCategoria>
             </subCategorias>
         </categoria>
+        <categoria>
+            <id>5</id>
+            <nombre>Prueba</nombre>
+            <descripcion>Prueba</descripcion>
+            <subCategorias>
+                <subCategoria>
+                    <id>5.1</id>
+                    <nombre>Prueba</nombre>
+                    <descripcion>Prueba</descripcion>
+                    <articulos>
+                        <articulo>
+                            <id>5.1.1</id>
+                            <nombre>Prueba</nombre>
+                            <descripcion>Prueba</descripcion>
+                            <presentaciones>
+                                <presentacion>
+                                    <unidad>0</unidad>
+                                    <cantidad>100.0</cantidad>
+                                    <compra>500.0</compra>
+                                    <venta>1000.0</venta>
+                                    <existencia>80</existencia>
+                                </presentacion>
+                            </presentaciones>
+                        </articulo>
+                    </articulos>
+                </subCategoria>
+            </subCategorias>
+        </categoria>
     </categorias>
 </inventario>

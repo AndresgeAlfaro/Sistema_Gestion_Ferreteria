@@ -1,10 +1,8 @@
-package cr.una.Presentation.Model;
+package cr.una.FrontEnd.Presentation.Model;
 
-import cr.una.Logic.*;
+import cr.una.BackEnd.Logic.*;
 
 import javax.swing.*;
-import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;

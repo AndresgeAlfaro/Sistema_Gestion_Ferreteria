@@ -1,9 +1,9 @@
-package cr.una.Presentation.Controller;
+package cr.una.FrontEnd.Presentation.Controller;
 
-import cr.una.Logic.*;
-import cr.una.Presentation.Model.Model;
-import cr.una.Presentation.View.View;
-import cr.una.Presentation.View.viewLogin;
+import cr.una.BackEnd.Logic.*;
+import cr.una.FrontEnd.Presentation.Model.Model;
+import cr.una.FrontEnd.Presentation.View.View;
+import cr.una.FrontEnd.Presentation.View.viewLogin;
 
 import javax.swing.*;
 import java.util.List;

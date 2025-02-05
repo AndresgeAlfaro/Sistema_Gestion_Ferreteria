@@ -1,8 +1,8 @@
-package cr.una.Data;
+package cr.una.BackEnd.Data;
 
-import cr.una.Logic.Categoria;
-import cr.una.Logic.Medida;
-import cr.una.Logic.User;
+import cr.una.BackEnd.Logic.Categoria;
+import cr.una.BackEnd.Logic.Medida;
+import cr.una.BackEnd.Logic.User;
 
 import java.util.ArrayList;
 import java.util.List;

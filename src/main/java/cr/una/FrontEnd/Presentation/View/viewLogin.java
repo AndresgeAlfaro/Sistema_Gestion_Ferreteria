@@ -1,7 +1,7 @@
-package cr.una.Presentation.View;
+package cr.una.FrontEnd.Presentation.View;
 
-import cr.una.Logic.Service;
-import cr.una.Presentation.Controller.Controller;
+import cr.una.BackEnd.Logic.Service;
+import cr.una.FrontEnd.Presentation.Controller.Controller;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

@@ -1,12 +1,6 @@
 package cr.una;
 
-import cr.una.Presentation.Controller.Controller;
-import cr.una.Presentation.View.View;
-import cr.una.Logic.Service;
-
-import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import cr.una.FrontEnd.Presentation.Controller.Controller;
 
 
 public class Main {

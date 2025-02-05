@@ -1,4 +1,4 @@
-package cr.una.Logic;
+package cr.una.BackEnd.Logic;
 
 import java.util.ArrayList;
 import java.util.List;

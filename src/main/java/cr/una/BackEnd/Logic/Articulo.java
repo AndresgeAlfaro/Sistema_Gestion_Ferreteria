@@ -1,23 +1,23 @@
-package cr.una.Logic;
+package cr.una.BackEnd.Logic;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Subcategoria {
+public class Articulo {
     private String nombre, descripcion;
-    private List<Articulo> articulos;
+    private List<Presentacion> presentaciones;
     String ID;
 
 
-    public Subcategoria(String ID, String nombre, String descripcion){
-        articulos = new ArrayList<Articulo>();
+    public Articulo(String ID, String nombre, String descripcion){
+        presentaciones = new ArrayList<Presentacion>();
         this.ID = ID;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
 
-    public Subcategoria(String ID, String nombre, String descripcion, List<Articulo> articulos){
-        this.articulos = articulos;
+    public Articulo(String ID, String nombre, String descripcion, List<Presentacion> presentaciones){
+        this.presentaciones = presentaciones;
         this.ID = ID;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -34,12 +34,12 @@ public class Subcategoria {
         return nombre;
     }
 
-    public List<Articulo> getArticulos() {
-        return articulos;
+    public List<Presentacion> getPresentaciones() {
+        return presentaciones;
     }
 
-    public void setArticulos(List<Articulo> articulos) {
-        this.articulos = articulos;
+    public void setPresentaciones(List<Presentacion> presentaciones) {
+        this.presentaciones = presentaciones;
     }
 
     public String getID() {
