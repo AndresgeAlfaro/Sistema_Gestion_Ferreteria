@@ -3,7 +3,9 @@ package cr.una.Presentation.Controller;
 import cr.una.Logic.*;
 import cr.una.Presentation.Model.Model;
 import cr.una.Presentation.View.View;
+import cr.una.Presentation.View.viewLogin;
 
+import javax.swing.*;
 import java.util.List;
 
 
@@ -11,18 +13,67 @@ public class Controller {
     private Model model;
     private View view;
 
-    public void startAplication(View view) {
+    public Controller() {
         try{
             Service.instance().cargarXML();
         }catch (Exception ex){
-        System.out.println(ex.getMessage());
+            System.out.println(ex.getMessage());
         }
         model = new Model();
-        this.view = view;
-        view.setController(this);
         model.init(Service.instance().getCategorias(), Service.instance().getMedidas(), Service.instance().getUsers());
-        this.view.updateList(0);
-        this.view.activeBox(0);
+    }
+
+    public void starLogin(){
+
+        viewLogin view = new viewLogin();
+        view.setController(this);
+        view.initIcon();
+    }
+    public boolean checkLogin(String username, String password ) throws Exception{
+        try {
+            User user = model.checkLogin(username, password);
+            boolean login=false;
+            if(user.getState().equals("Activo")){
+                if(user.getPassword().equals(password)){
+                    login=true;
+                }else{
+                    if(model.addTrie(username)==3){
+                        updateUsers(model.getUsers());
+                        throw new Exception("Limite de Intentos Excedido - Bloqueando Usuario");
+                    }else{
+                        throw new Exception("Credenciales Incorrectas - Intente Denuevo");
+                    }
+                }
+            }else{
+                throw new Exception("Este Usuario esta Bloqueado");
+            }
+
+
+            if(login){
+                startAplication();
+            }
+            return login;
+        }catch (Exception ex){
+            throw new Exception(ex.getMessage());
+        }
+
+    }
+    public void startAplication() {
+        View view = new View();
+        view.setController(this);
+        view.updateList(0);
+        view.activeBox(0);
+    }
+    public ImageIcon getIcon(int icoIndex){
+        try{
+            return model.getIcon(icoIndex);
+
+        }catch (Exception er){
+            return null;
+        }
+    }
+    public void updateUsers(List<User> users) throws Exception {
+        Service.instance().setUsers(users);
     }
     public void guardarCategoria(Categoria categoria) throws Exception {
         Service.instance().guardarCategoria(categoria);
@@ -160,21 +211,5 @@ public class Controller {
         Service.instance().reduceExistences(model.getFacturas());
         model.clearFactura();
         model.setCategorias(Service.instance().getCategorias());
-    }
-
-    public boolean Login(String username, String password) throws Exception {
-        for (User u : Service.instance().getUsers()) {
-            if (u.getUsername().equals(username)) {
-                if (u.getPassword().equals(password)) {
-                    if(u.isActive()){
-                        model.setCurrentUser(u);
-                        return true;
-                    }
-                    throw new Exception("Usuario bloqueado");
-                }
-                throw new Exception("Contraseña incorrecta");
-            }
-        }
-        return false;
     }
 }

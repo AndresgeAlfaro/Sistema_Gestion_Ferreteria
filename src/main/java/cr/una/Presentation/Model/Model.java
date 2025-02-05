@@ -2,30 +2,57 @@ package cr.una.Presentation.Model;
 
 import cr.una.Logic.*;
 
+import javax.swing.*;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
     private List<Categoria> categorias;
     private List<Medida> medidas;
+    private List<User> users;
     private Categoria currentCategoria;
     private Subcategoria currentSubcategoria;
     private Articulo currentArticulo;
     private Presentacion currentPresentacion;
-
-    private List<User> Users;
-    private User currentUser;
+    private ImageIcon[] myIcons = {new ImageIcon(Paths.get("icoCheck0.png").toString()),new ImageIcon(Paths.get("icoCheck1.png").toString())};
 
     private List<Factura> facturas;
 
-    public void init(List<Categoria> c, List<Medida> a, List<User> u){
+    public void init(List<Categoria> c, List<Medida> a, List<User> u) {
         facturas = new ArrayList<Factura>();
         setCategorias(c);
         currentCategoria = new Categoria();
         setMedidas(a);
-        Users = u;
+        setUsers(u);
     }
 
+    public User checkLogin(String user, String pass) throws Exception {
+        for(User u : users){
+            if(u.getUsername().equals(user)){
+                return u;
+            }
+        }
+        throw new Exception("El Usuario no Existe");
+    }
+    public int addTrie(String user){
+        for(User u : users){
+            if(u.getUsername().equals(user)){
+                u.addTries();
+                if(u.getTries()==3){
+                    u.setState("Bloqueado");
+                }
+                return u.getTries();
+            }
+        }
+        return 0;
+    }
+
+    public ImageIcon getIcon(int i){
+        return myIcons[i];
+    }
 
     public List<Categoria> getCategorias() {
         return categorias;
@@ -42,10 +69,6 @@ public class Model {
         return activo.getPresentaciones();
     }
 
-    public List<User> getUsers() { return Users; }
-    public User getCurrentUser() { return currentUser; }
-    public void setCurrentUser(User user) { currentUser = user; }
-
     public void setCategorias(List<Categoria> categorias) {
         this.categorias = categorias;
     }
@@ -55,6 +78,12 @@ public class Model {
     }
     public void setMedidas(List<Medida> medidas) {
         this.medidas = medidas;
+    }
+    public List<User> getUsers() {
+        return users;
+    }
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
     public Medida readMedida(String id){
         Medida result = getMedidas().stream()

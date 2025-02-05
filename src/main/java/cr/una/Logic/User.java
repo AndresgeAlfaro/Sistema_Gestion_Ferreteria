@@ -1,32 +1,33 @@
 package cr.una.Logic;
 
 public class User {
-    String username;
-    String password;
-    boolean active;
+    private String username;
+    private String password;
+    private String state;
+    private int tries;
 
-    public User(String username, String password, String active) {
+    public User(String username, String password, String state) {
         this.username = username;
         this.password = password;
-        if(active.equals("Activo")){
-            this.active = true;
-        }else{
-            this.active = false;
-        }
+        this.state = state;
+        this.tries = 0;
     }
     public String getUsername() {
         return username;
     }
-    public void setUsername(String username) {
-        this.username = username;
-    }
     public String getPassword() {
         return password;
     }
-    public void setPassword(String password) {
-        this.password = password;
+    public String getState() {
+        return state;
     }
-    public boolean isActive() {
-        return active;
+    public void setState(String state) {
+        this.state = state;
+    }
+    public int getTries() {
+        return tries;
+    }
+    public void addTries() {
+        tries++;
     }
 }

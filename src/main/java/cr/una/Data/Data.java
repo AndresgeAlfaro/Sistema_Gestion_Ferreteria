@@ -11,13 +11,12 @@ public class Data {
 
     private List<Medida> medidas;
     private List<Categoria> Categorias;
-    private List<User> Users;
+    private List<User> usuarios;
 
     public Data() //Constructor
     {
         Categorias=new ArrayList<>();
         medidas=new ArrayList<>();
-        Users = new ArrayList<>();
     }
 
     public List<Categoria> getCategorias() {
@@ -34,7 +33,10 @@ public class Data {
         this.medidas = medidas;
     }
 
-    public List<User> getUsers() {return Users;}
-
-    public void setUsers(List<User> Users) {this.Users = Users;}
+    public List<User> getUsuarios() {
+        return usuarios;
+    }
+    public void setUsuarios(List<User> usuarios) {
+        this.usuarios = usuarios;
+    }
 }

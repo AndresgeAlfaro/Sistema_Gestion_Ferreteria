@@ -54,7 +54,13 @@ public class Service {
         return data.getMedidas();
     }
 
-    public List<User> getUsers() {return data.getUsers();}
+    public List<User> getUsers() {
+        return data.getUsuarios();
+    }
+
+    public void setUsers(List<User> users) {
+        data.setUsuarios(users);
+    }
 
     public Categoria readCategoria(Categoria v){ //CAMBIAR A PROBLEMA DE EXAMEN
         Categoria result = data.getCategorias().stream()

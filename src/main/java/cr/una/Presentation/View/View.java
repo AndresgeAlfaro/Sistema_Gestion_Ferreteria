@@ -16,6 +16,8 @@ import javax.swing.plaf.InsetsUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class View {
@@ -74,10 +76,6 @@ public class View {
     private JScrollPane ScrollPed;
     private JPanel ListPed;
     private JTextField CantUnidad;
-    private JTextField inputUser;
-    private JPasswordField inputPass;
-    private JButton Login;
-    private JButton Logout;
 
     private boolean[] editar = {false,false,false,false};
 
@@ -95,7 +93,29 @@ public class View {
 
     private Controller controller;
 
+    private JFrame window;
+
     public View() {
+        window = new JFrame();
+        window.setContentPane(mainPanel);
+        window.setSize(1200, 710);
+        window.setLocationRelativeTo(null);
+        window.setResizable(false);
+        //window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        window.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try{
+                    Service.instance().guardarXML();
+                    controller.starLogin();
+
+                }catch (Exception ex){
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Información", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        window.setTitle("Sistema de Gestion de Ferreteria");
+        window.setVisible(true);
         UIManager.put("TabbedPane.contentBorderInsets", new InsetsUIResource(1, 0,
                 0, 0));
         UIManager.put("TabbedPane.contentAreaColor", new ColorUIResource(
@@ -187,7 +207,6 @@ public class View {
         });
         TabPanel.setEnabledAt(1,false);
         TabPanel.setEnabledAt(2,false);
-        TabPanel.setEnabledAt(3,false);
         CatSub.setBorder(null);
         CatArt.setBorder(null);
         SubArt.setBorder(null);
@@ -562,42 +581,6 @@ public class View {
                 catch (Exception ex){
                     JOptionPane.showMessageDialog(mainPanel, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            }
-        });
-        Logout.setEnabled(false);
-        Login.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    if(inputUser.getText().isEmpty() || new String(inputPass.getPassword()).isEmpty()){
-                        throw new Exception("Campos vacios");
-                    }
-                    if(controller.Login(inputUser.getText(), new String(inputPass.getPassword()))){
-                        inputUser.setEnabled(false);
-                        inputPass.setEnabled(false);
-                        TabPanel.setEnabledAt(1, true);
-                        Login.setEnabled(false);
-                        Logout.setEnabled(true);
-                    }else{
-                        throw new Exception("Usuario no encontrado");
-                    }
-                }catch (Exception ex) {
-                    JOptionPane.showMessageDialog(mainPanel, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        });
-        Logout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TabPanel.setEnabledAt(1, false);
-                TabPanel.setEnabledAt(2, false);
-                TabPanel.setEnabledAt(3, false);
-                Login.setEnabled(true);
-                Logout.setEnabled(false);
-                inputUser.setEnabled(true);
-                inputPass.setEnabled(true);
-                inputUser.setText("");
-                inputPass.setText("");
             }
         });
     }

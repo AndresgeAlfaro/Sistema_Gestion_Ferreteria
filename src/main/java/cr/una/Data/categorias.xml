@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <inventario>
+    <usuarios>
+        <usuario>
+            <username>JohnDoe</username>
+            <password>MyP455W04D</password>
+            <state>Activo</state>
+        </usuario>
+        <usuario>
+            <username>JaneDoe</username>
+            <password>qiAqv547Q#$</password>
+            <state>Bloqueado</state>
+        </usuario>
+        <usuario>
+            <username>JuanPerez</username>
+            <password>AnyPassword</password>
+            <state>Activo</state>
+        </usuario>
+    </usuarios>
     <medidas>
         <medida>
             <id>0</id>
