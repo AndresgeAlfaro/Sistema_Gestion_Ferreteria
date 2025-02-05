@@ -2,8 +2,10 @@ package cr.una.BackEnd.Logic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
-public class Articulo {
+public class Articulo implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String nombre, descripcion;
     private List<Presentacion> presentaciones;
     String ID;

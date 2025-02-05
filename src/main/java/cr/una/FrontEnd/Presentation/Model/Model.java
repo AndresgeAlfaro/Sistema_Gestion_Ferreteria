@@ -1,183 +1,172 @@
 package cr.una.FrontEnd.Presentation.Model;
 
 import cr.una.BackEnd.Logic.*;
-
 import javax.swing.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Model {
-    private List<Categoria> categorias;
-    private List<Medida> medidas;
-    private List<User> users;
+    private List<Categoria> categorias = new ArrayList<>();
+    private List<Medida> medidas = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
     private Categoria currentCategoria;
     private Subcategoria currentSubcategoria;
     private Articulo currentArticulo;
     private Presentacion currentPresentacion;
-    private ImageIcon[] myIcons = {new ImageIcon(Paths.get("icoCheck0.png").toString()),new ImageIcon(Paths.get("icoCheck1.png").toString())};
+    private final ImageIcon[] myIcons = {
+            new ImageIcon(Paths.get("icoCheck0.png").toString()),
+            new ImageIcon(Paths.get("icoCheck1.png").toString())
+    };
+    private List<Factura> facturas = new ArrayList<>();
 
-    private List<Factura> facturas;
-
-    public void init(List<Categoria> c, List<Medida> a, List<User> u) {
-        facturas = new ArrayList<Factura>();
-        setCategorias(c);
-        currentCategoria = new Categoria();
-        setMedidas(a);
-        setUsers(u);
+    public void setCategorias(List<Categoria> categorias) {
+        this.categorias = categorias != null ? categorias : new ArrayList<>();
     }
 
-    public User checkLogin(String user, String pass) throws Exception {
-        for(User u : users){
-            if(u.getUsername().equals(user)){
-                return u;
-            }
-        }
-        throw new Exception("El Usuario no Existe");
-    }
-    public int addTrie(String user){
-        for(User u : users){
-            if(u.getUsername().equals(user)){
-                u.addTries();
-                if(u.getTries()==3){
-                    u.setState("Bloqueado");
-                }
-                return u.getTries();
-            }
-        }
-        return 0;
+    public void setMedidas(List<Medida> medidas) {
+        this.medidas = medidas != null ? medidas : new ArrayList<>();
     }
 
-    public ImageIcon getIcon(int i){
-        return myIcons[i];
+    public void setUsers(List<User> users) {
+        this.users = users != null ? users : new ArrayList<>();
+    }
+
+    public ImageIcon getIcon(int index) {
+        return (index >= 0 && index < myIcons.length) ? myIcons[index] : null;
     }
 
     public List<Categoria> getCategorias() {
-        return categorias;
+        return new ArrayList<>(categorias);
     }
 
     public List<Subcategoria> getSubcategorias(Categoria activo) {
-        return activo.getSubcategorias();
+        return activo != null ?
+                new ArrayList<>(activo.getSubcategorias()) :
+                new ArrayList<>();
     }
 
     public List<Articulo> getArticulos(Subcategoria activo) {
-        return activo.getArticulos();
-    }
-    public List<Presentacion> getPresentaciones(Articulo activo) {
-        return activo.getPresentaciones();
+        return activo != null ?
+                new ArrayList<>(activo.getArticulos()) :
+                new ArrayList<>();
     }
 
-    public void setCategorias(List<Categoria> categorias) {
-        this.categorias = categorias;
+    public List<Presentacion> getPresentaciones(Articulo activo) {
+        return activo != null ?
+                new ArrayList<>(activo.getPresentaciones()) :
+                new ArrayList<>();
     }
 
     public List<Medida> getMedidas() {
-        return medidas;
+        return new ArrayList<>(medidas);
     }
-    public void setMedidas(List<Medida> medidas) {
-        this.medidas = medidas;
-    }
+
     public List<User> getUsers() {
-        return users;
+        return new ArrayList<>(users);
     }
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-    public Medida readMedida(String id){
-        Medida result = getMedidas().stream()
-                .filter(i->i.getID().equals(id)).findFirst().orElse(null);
-        return result;
-    }
-    public Categoria readCategorias(String cod){
-        Categoria result = getCategorias().stream()
-                .filter(i->i.getID().equals(cod)).findFirst().orElse(null);
-        return result;
-    }
-    public Subcategoria readSubCategorias(String cod){
-        Subcategoria result = currentCategoria.getSubcategorias().stream()
-                .filter(i->i.getID().equals(cod)).findFirst().orElse(null);
-        return result;
-    }
-    public Articulo readArticulos(String cod){
-        Articulo result = currentSubcategoria.getArticulos().stream()
-                .filter(i->i.getID().equals(cod)).findFirst().orElse(null);
-        return result;
-    }
-    public Presentacion readPresentaciones(String cod){
-        int split = cod.indexOf('|');
-        String cat = cod.substring(0, split);
-        String cant = cod.substring(split + 1);
-        System.out.println(cat);
-        System.out.println(cant);
-        Presentacion result = currentArticulo.getPresentaciones().stream()
-                .filter(i->i.getUnidad().equals(cat)&&i.getCantidad()==(Double.parseDouble(cant))).findFirst().orElse(null);
-        return result;
-    }
+
+    // Gestión de selecciones actuales
     public Categoria getCurrentCategoria() {
         return currentCategoria;
     }
 
-    public void setCurrentCategoria(Categoria current) {
-        this.currentCategoria = current;
+    public void setCurrentCategoria(Categoria currentCategoria) {
+        this.currentCategoria = currentCategoria;
     }
 
-    public Subcategoria getCurrentSubCategoria() {
+    public Subcategoria getCurrentSubcategoria() {
         return currentSubcategoria;
     }
 
-    public void setCurrentSubCategoria(Subcategoria current) {
-        this.currentSubcategoria = current;
+    public void setCurrentSubcategoria(Subcategoria currentSubcategoria) {
+        this.currentSubcategoria = currentSubcategoria;
     }
 
     public Articulo getCurrentArticulo() {
         return currentArticulo;
     }
 
-    public void setCurrentArticulo(Articulo current) {
-        this.currentArticulo = current;
+    public void setCurrentArticulo(Articulo currentArticulo) {
+        this.currentArticulo = currentArticulo;
     }
-    public void setCurrentPresentacion(Presentacion current) {
-        this.currentPresentacion = current;
-    }
+
     public Presentacion getCurrentPresentacion() {
         return currentPresentacion;
     }
 
-    public void addItemFactura(Factura f) throws Exception{
-        Factura factura = searchFact(f);
-        if(factura!=null){
-            throw new Exception("No se puede agregar el articulo, porque ya se encuntra en la factura.");
-        }else{
-            facturas.add(f);
+    public void setCurrentPresentacion(Presentacion currentPresentacion) {
+        this.currentPresentacion = currentPresentacion;
+    }
+
+    // Gestión de facturas
+    public void addItemFactura(Factura factura) throws Exception {
+        boolean exists = facturas.stream().anyMatch(f ->
+                f.getPresentacion().equals(factura.getPresentacion()));
+
+        if (exists) {
+            throw new Exception("El artículo ya existe en la factura");
         }
+        facturas.add(factura);
     }
-    public void clearFactura(){
-        facturas.removeAll(facturas);
+
+    public void clearFactura() {
+        facturas.clear();
     }
+
     public List<Factura> getFacturas() {
-        return facturas;
+        return new ArrayList<>(facturas);
     }
-    public Factura searchFact(Factura factura){
-        for(Factura f : facturas){
-            if(f.getPresentacion().getUnidad().equals(factura.getPresentacion().getUnidad())&&
-            f.getPresentacion().getCantidad()==factura.getPresentacion().getCantidad()){
-                return f;
-            }
-        }
-        return null;
+
+    public void deleteItemFactura(String id) {
+        facturas.removeIf(f ->
+                f.getPresentacion().getUnidad().equals(id.split("\\|")[0]) &&
+                        f.getPresentacion().getCantidad() == Double.parseDouble(id.split("\\|")[1])
+        );
     }
-    public void deleteItemFactura(String id){
-        int split = id.indexOf('|');
-        String cat = id.substring(0, split);
-        String cant = id.substring(split + 1);
-        Factura e=null;
-        for(Factura f : facturas){
-            if(f.getPresentacion().getUnidad().equals(cat)&&f.getPresentacion().getCantidad()==(Double.parseDouble(cant))){
-                e=f;
-            }
-        }
-        if(e!=null){
-            facturas.remove(e);
-        }
+
+    // Búsquedas locales
+    public Medida findMedida(String id) {
+        return medidas.stream()
+                .filter(m -> m.getID().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Categoria findCategoria(String id) {
+        return categorias.stream()
+                .filter(c -> c.getID().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Subcategoria findSubcategoria(String id) {
+        return Optional.ofNullable(currentCategoria)
+                .map(c -> c.getSubcategorias().stream()
+                        .filter(s -> s.getID().equals(id))
+                        .findFirst()
+                        .orElse(null))
+                .orElse(null);
+    }
+
+    public Articulo findArticulo(String id) {
+        return Optional.ofNullable(currentSubcategoria)
+                .map(s -> s.getArticulos().stream()
+                        .filter(a -> a.getID().equals(id))
+                        .findFirst()
+                        .orElse(null))
+                .orElse(null);
+    }
+
+    public Presentacion findPresentacion(String id) {
+        String[] parts = id.split("\\|");
+        return Optional.ofNullable(currentArticulo)
+                .map(a -> a.getPresentaciones().stream()
+                        .filter(p -> p.getUnidad().equals(parts[0]) &&
+                                p.getCantidad() == Double.parseDouble(parts[1]))
+                        .findFirst()
+                        .orElse(null))
+                .orElse(null);
     }
 }

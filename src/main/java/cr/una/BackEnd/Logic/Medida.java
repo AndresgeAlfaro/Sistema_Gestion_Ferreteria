@@ -1,6 +1,9 @@
 package cr.una.BackEnd.Logic;
 
-public class Medida {
+import java.io.Serializable;
+
+public class Medida  implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String ID, name;
     public Medida(String ID, String name) {
         this.ID = ID;

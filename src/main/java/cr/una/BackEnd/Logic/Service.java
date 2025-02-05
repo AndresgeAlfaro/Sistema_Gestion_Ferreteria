@@ -5,27 +5,30 @@ import cr.una.BackEnd.Data.XMLPersistent;
 
 import org.xml.sax.SAXException;
 
+import java.io.Serializable;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.IOException;
 import java.util.List;
 
-public class Service {
+public class Service implements Serializable{
+    private static final long serialVersionUID = 1L;
     private static Service theInstance;
     private XMLPersistent xml;
     private Data data;
 
-    private Service() {
+    public Service() {
         data = new Data();
         xml = new XMLPersistent();
     }
 
-    public static Service instance(){
+    public static synchronized Service instance(){
         if (theInstance == null){ theInstance = new Service();}
         return theInstance;
     }
 
-    public void cargarXML() throws Exception {
+    public synchronized void cargarXML() throws Exception {
         try{
             data = xml.cargarXML();
         }
@@ -36,7 +39,7 @@ public class Service {
             throw e;
         }
     }
-    public void guardarXML() throws Exception {
+    public synchronized void guardarXML() throws Exception {
         try{
             xml.guardarXML(data);
         }catch(TransformerConfigurationException | ParserConfigurationException e){
@@ -45,49 +48,49 @@ public class Service {
     }
 
     //Gets
-    public List<Categoria> getCategorias() {
+    public synchronized List<Categoria> getCategorias() {
         return data.getCategorias();
     }
 
-    public List<Medida> getMedidas() {
+    public synchronized List<Medida> getMedidas() {
         return data.getMedidas();
     }
 
-    public List<User> getUsers() {
+    public synchronized List<User> getUsers() {
         return data.getUsuarios();
     }
 
-    public void setUsers(List<User> users) {
+    public synchronized void setUsers(List<User> users) {
         data.setUsuarios(users);
     }
 
-    public Categoria readCategoria(Categoria v){ //CAMBIAR A PROBLEMA DE EXAMEN
+    public synchronized Categoria readCategoria(Categoria v){ //CAMBIAR A PROBLEMA DE EXAMEN
         Categoria result = data.getCategorias().stream()
                 .filter(i->i.getID().equals(v.getID())).findFirst().orElse(null);
         return result;
     }
-    public Subcategoria readSubCategoria(Categoria v, Subcategoria subCategoria){ //CAMBIAR A PROBLEMA DE EXAMEN
+    public synchronized Subcategoria readSubCategoria(Categoria v, Subcategoria subCategoria){ //CAMBIAR A PROBLEMA DE EXAMEN
         Subcategoria result = v.getSubcategorias().stream()
                 .filter(i->i.getID().equals(subCategoria.getID())).findFirst().orElse(null);
         return result;
     }
-    public Articulo readArticulo(Subcategoria subCategoria, Articulo articulo){ //CAMBIAR A PROBLEMA DE EXAMEN
+    public synchronized Articulo readArticulo(Subcategoria subCategoria, Articulo articulo){ //CAMBIAR A PROBLEMA DE EXAMEN
         Articulo result = subCategoria.getArticulos().stream()
                 .filter(i->i.getID().equals(articulo.getID())).findFirst().orElse(null);
         return result;
     }
-    public Presentacion readPresentacion(Articulo articulo, Presentacion presentacion){ //CAMBIAR A PROBLEMA DE EXAMEN
+    public synchronized Presentacion readPresentacion(Articulo articulo, Presentacion presentacion){ //CAMBIAR A PROBLEMA DE EXAMEN
         Presentacion result = articulo.getPresentaciones().stream()
                 .filter((i->i.getUnidad().equals(presentacion.getUnidad())&&i.getCantidad()==presentacion.getCantidad())).findFirst().orElse(null);
         return result;
     }
-    public void guardarCategoria(Categoria categoria) throws Exception {
+    public synchronized void guardarCategoria(Categoria categoria) throws Exception {
         if(readCategoria(categoria)!= null){
             throw new Exception("Ya existe una categoria con ese código");
         }
         else data.getCategorias().add(categoria);
     }
-    public void guardarSubCategoria(Categoria categoria,Subcategoria subCategoria) throws Exception {
+    public  synchronized void guardarSubCategoria(Categoria categoria,Subcategoria subCategoria) throws Exception {
         Categoria a = readCategoria(categoria);
         if(readSubCategoria(a,subCategoria)!= null){
             throw new Exception("Ya existe una subCategoria con ese código");
@@ -99,7 +102,7 @@ public class Service {
             data.getCategorias().add(index,a);
         }
     }
-    public void guardarArticulo(Categoria categoria,Subcategoria subCategoria,Articulo articulo) throws Exception {
+    public synchronized void guardarArticulo(Categoria categoria,Subcategoria subCategoria,Articulo articulo) throws Exception {
         Categoria a = readCategoria(categoria);
         Subcategoria b = readSubCategoria(a,subCategoria);
         if(readArticulo(b,articulo)!= null){
@@ -115,7 +118,7 @@ public class Service {
             data.getCategorias().add(index,a);
         }
     }
-    public void guardarPresentacion(Categoria categoria,Subcategoria subCategoria,Articulo articulo, Presentacion presentacion) throws Exception {
+    public synchronized void guardarPresentacion(Categoria categoria,Subcategoria subCategoria,Articulo articulo, Presentacion presentacion) throws Exception {
         Categoria a = readCategoria(categoria);
         Subcategoria b = readSubCategoria(a,subCategoria);
         Articulo c = readArticulo(b,articulo);
@@ -135,7 +138,7 @@ public class Service {
             data.getCategorias().add(index,a);
         }
     }
-    public void editarCategoria(Categoria activo) throws Exception {
+    public synchronized void editarCategoria(Categoria activo) throws Exception {
         Categoria a = readCategoria(activo);
         if(a == null) throw new Exception("No existe una categoria registrada con ese código");
         else{
@@ -144,7 +147,7 @@ public class Service {
             data.getCategorias().set(index, activo);
         }
     }
-    public void editarSubCategoria(Categoria cat,Subcategoria activo) throws Exception {
+    public synchronized void editarSubCategoria(Categoria cat,Subcategoria activo) throws Exception {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,activo);
         if(b == null) throw new Exception("No existe una subcategoria registrada con ese código");
@@ -157,7 +160,7 @@ public class Service {
             data.getCategorias().add(index,a);
         }
     }
-    public void editarArticulo(Categoria cat, Subcategoria sub,Articulo activo) throws Exception {
+    public synchronized void editarArticulo(Categoria cat, Subcategoria sub,Articulo activo) throws Exception {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,sub);
         Articulo c = readArticulo(b,activo);
@@ -174,7 +177,7 @@ public class Service {
             data.getCategorias().add(index,a);
         }
     }
-    public void editarPresentacion(Categoria cat, Subcategoria sub,Articulo art,Presentacion activo) throws Exception {
+    public synchronized void editarPresentacion(Categoria cat, Subcategoria sub,Articulo art,Presentacion activo) throws Exception {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,sub);
         Articulo c = readArticulo(b,art);
@@ -194,12 +197,12 @@ public class Service {
             data.getCategorias().add(index,a);
         }
     }
-    public void deleteCategoria(Categoria cat) throws Exception {
+    public synchronized void deleteCategoria(Categoria cat) throws Exception {
         Categoria a = readCategoria(cat);
         if(a == null) throw new Exception("No existe una categoria registrada con ese código");
         data.getCategorias().remove(a);
     }
-    public void deleteSubCategoria(Categoria cat, Subcategoria sub) throws Exception {
+    public synchronized void deleteSubCategoria(Categoria cat, Subcategoria sub) throws Exception {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,sub);
         if(b == null) throw new Exception("No existe una subCategoria registrada con ese código");
@@ -208,7 +211,7 @@ public class Service {
         a.getSubcategorias().remove(b);
         data.getCategorias().add(index,a);
     }
-    public void deleteArticulo(Categoria cat, Subcategoria sub, Articulo art) throws Exception {
+    public synchronized void deleteArticulo(Categoria cat, Subcategoria sub, Articulo art) throws Exception {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,sub);
         Articulo c = readArticulo(b,art);
@@ -221,7 +224,7 @@ public class Service {
         a.getSubcategorias().add(index2,b);
         data.getCategorias().add(index,a);
     }
-    public void deletePresentation(Categoria cat, Subcategoria sub, Articulo art,Presentacion pre) throws Exception {
+    public synchronized void deletePresentation(Categoria cat, Subcategoria sub, Articulo art,Presentacion pre) throws Exception {
         Categoria a = readCategoria(cat);
         Subcategoria b = readSubCategoria(a,sub);
         Articulo c = readArticulo(b,art);
@@ -237,7 +240,7 @@ public class Service {
         a.getSubcategorias().add(index2,b);
         data.getCategorias().add(index,a);
     }
-    public void reduceExistences(List<Factura> facturas) throws Exception {
+    public synchronized void reduceExistences(List<Factura> facturas) throws Exception {
         for (Factura f : facturas) {
             Categoria a = readCategoria(f.getCategoria());
             Subcategoria b = readSubCategoria(a,f.getSubcategoria());

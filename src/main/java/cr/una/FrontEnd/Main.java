@@ -1,4 +1,4 @@
-package cr.una;
+package cr.una.FrontEnd;
 
 import cr.una.FrontEnd.Presentation.Controller.Controller;
 
@@ -8,6 +8,6 @@ public class Main {
 
     public static void main(String[] args) {
         main = new Controller();
-        main.starLogin();
+        main.startLogin();
     }
 }

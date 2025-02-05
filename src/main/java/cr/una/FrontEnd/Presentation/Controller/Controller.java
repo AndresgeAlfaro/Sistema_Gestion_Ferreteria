@@ -6,210 +6,242 @@ import cr.una.FrontEnd.Presentation.View.View;
 import cr.una.FrontEnd.Presentation.View.viewLogin;
 
 import javax.swing.*;
+import java.io.*;
+import java.net.Socket;
 import java.util.List;
-
 
 public class Controller {
     private Model model;
-    private View view;
+    private Socket socket;
+    private ObjectOutputStream output;
+    private ObjectInputStream input;
 
     public Controller() {
-        try{
-            Service.instance().cargarXML();
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
         model = new Model();
-        model.init(Service.instance().getCategorias(), Service.instance().getMedidas(), Service.instance().getUsers());
+        initializeConnection();
     }
 
-    public void starLogin(){
+    private void initializeConnection() {
+        try {
+            socket = new Socket("localhost", 12345);
+            output = new ObjectOutputStream(socket.getOutputStream());
+            input = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            showError("Error de conexión", "No se pudo conectar al servidor");
+        }
+    }
 
+    private void showError(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void startLogin() {
         viewLogin view = new viewLogin();
         view.setController(this);
         view.initIcon();
     }
-    public boolean checkLogin(String username, String password ) throws Exception{
+
+    public boolean checkLogin(String username, String password) throws Exception {
         try {
-            User user = model.checkLogin(username, password);
-            boolean login=false;
-            if(user.getState().equals("Activo")){
-                if(user.getPassword().equals(password)){
-                    login=true;
-                }else{
-                    if(model.addTrie(username)==3){
-                        updateUsers(model.getUsers());
-                        throw new Exception("Limite de Intentos Excedido - Bloqueando Usuario");
-                    }else{
-                        throw new Exception("Credenciales Incorrectas - Intente Denuevo");
-                    }
-                }
-            }else{
-                throw new Exception("Este Usuario esta Bloqueado");
+            output.writeObject("LOGIN");
+            output.writeObject(username);
+            output.writeObject(password);
+
+            String response = (String) input.readObject();
+            if (response.startsWith("ERROR")) {
+                throw new Exception(response.substring(6));
             }
 
-
-            if(login){
-                startAplication();
-            }
-            return login;
-        }catch (Exception ex){
-            throw new Exception(ex.getMessage());
+            loadInitialData();
+            return true;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new Exception("Error de comunicación: " + e.getMessage());
         }
-
     }
-    public void startAplication() {
+
+    private void loadInitialData() throws Exception {
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+        model.setMedidas(executeCommand("GET_MEDIDAS", List.class));
+        model.setUsers(executeCommand("GET_USUARIOS", List.class));
+    }
+
+    private <T> T executeCommand(String command, Class<T> type) throws Exception {
+        try {
+            output.writeObject(command);
+            return type.cast(input.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            throw new Exception("Error al obtener datos: " + e.getMessage());
+        }
+    }
+
+    public void startApplication() {
         View view = new View();
         view.setController(this);
         view.updateList(0);
         view.activeBox(0);
     }
-    public ImageIcon getIcon(int icoIndex){
-        try{
-            return model.getIcon(icoIndex);
 
-        }catch (Exception er){
-            return null;
-        }
-    }
-    public void updateUsers(List<User> users) throws Exception {
-        Service.instance().setUsers(users);
-    }
+    // Operaciones CRUD Categorías
     public void guardarCategoria(Categoria categoria) throws Exception {
-        Service.instance().guardarCategoria(categoria);
-        model.setCategorias(Service.instance().getCategorias());
+        executeUpdate("GUARDAR_CATEGORIA", categoria);
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
     }
+
+    public void editarCategoria(Categoria activo) throws Exception {
+        executeUpdate("EDITAR_CATEGORIA", activo);
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+    }
+
+    public void deleteCategoria() throws Exception {
+        executeUpdate("ELIMINAR_CATEGORIA", model.getCurrentCategoria());
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+    }
+
+    // Operaciones CRUD Subcategorías
     public void guardarSubCategoria(Subcategoria subCategoria) throws Exception {
-        Service.instance().guardarSubCategoria(model.getCurrentCategoria(), subCategoria);
-        model.setCategorias(Service.instance().getCategorias());
+        executeUpdate("GUARDAR_SUBCATEGORIA", new Object[]{model.getCurrentCategoria(), subCategoria});
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
     }
+
+    public void editarSubCategoria(Subcategoria activo) throws Exception {
+        executeUpdate("EDITAR_SUBCATEGORIA", new Object[]{model.getCurrentCategoria(), activo});
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+    }
+
+    public void deleteSubCategoria() throws Exception {
+        executeUpdate("ELIMINAR_SUBCATEGORIA", new Object[]{model.getCurrentCategoria(), model.getCurrentSubcategoria()});
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+    }
+
+    // Operaciones CRUD Artículos
     public void guardarArticulo(Articulo articulo) throws Exception {
-        Service.instance().guardarArticulo(model.getCurrentCategoria(),getCurrentSubcategoria(), articulo);
-        model.setCategorias(Service.instance().getCategorias());
+        executeUpdate("GUARDAR_ARTICULO", new Object[]{model.getCurrentCategoria(), model.getCurrentSubcategoria(), articulo});
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
     }
+
+    public void editarArticulo(Articulo activo) throws Exception {
+        executeUpdate("EDITAR_ARTICULO", new Object[]{model.getCurrentCategoria(), model.getCurrentSubcategoria(), activo});
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+    }
+
+    public void deleteArticulo() throws Exception {
+        executeUpdate("ELIMINAR_ARTICULO", new Object[]{model.getCurrentCategoria(), model.getCurrentSubcategoria(), model.getCurrentArticulo()});
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+    }
+
+    // Operaciones CRUD Presentaciones
     public void guardarPresentacion(Presentacion presentacion) throws Exception {
-        Service.instance().guardarPresentacion(model.getCurrentCategoria(),getCurrentSubcategoria(), getCurrentArticulo(),presentacion);
-        model.setCategorias(Service.instance().getCategorias());
+        executeUpdate("GUARDAR_PRESENTACION", new Object[]{model.getCurrentCategoria(), model.getCurrentSubcategoria(), model.getCurrentArticulo(), presentacion});
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
     }
-    public void editCategoria(String cod) throws Exception {
-        Categoria a = model.readCategorias(cod);
-        if(a== null){
-            throw new Exception("No hay categorias registradas con ese código");
+
+    public void editarPresentacion(Presentacion activo) throws Exception {
+        executeUpdate("EDITAR_PRESENTACION", new Object[]{model.getCurrentCategoria(), model.getCurrentSubcategoria(), model.getCurrentArticulo(), activo});
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+    }
+
+    public void deletePresentation() throws Exception {
+        executeUpdate("ELIMINAR_PRESENTACION", new Object[]{model.getCurrentCategoria(), model.getCurrentSubcategoria(), model.getCurrentArticulo(), model.getCurrentPresentacion()});
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+    }
+
+    private void executeUpdate(String command, Object data) throws Exception {
+        try {
+            output.writeObject(command);
+            output.writeObject(data);
+            String response = (String) input.readObject();
+            if (response.startsWith("ERROR")) {
+                throw new Exception(response.substring(6));
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new Exception("Error de comunicación: " + e.getMessage());
         }
-        model.setCurrentCategoria(a);
     }
-    public void editSubCategoria(String cod) throws Exception {
-        Subcategoria a = model.readSubCategorias(cod);
-        if(a== null){
-            throw new Exception("No hay subCategorias registradas con ese código");
-        }
-        model.setCurrentSubCategoria(a);
+
+    // Getters del modelo
+    public List<Categoria> getCategorias() {
+        return model.getCategorias();
     }
-    public void editArticulo(String cod) throws Exception {
-        Articulo a = model.readArticulos(cod);
-        if(a== null){
-            throw new Exception("No hay articulos registradas con ese código");
-        }
-        model.setCurrentArticulo(a);
+
+    public List<Subcategoria> getSubcategorias(Categoria activo) {
+        return model.getSubcategorias(activo);
     }
-    public void editPresentacion(String cod) throws Exception {
-        Presentacion a = model.readPresentaciones(cod);
-        if(a== null){
-            throw new Exception("No hay Presentaciones registradas con ese código");
-        }
-        model.setCurrentPresentacion(a);
+
+    public List<Articulo> getArticulos(Subcategoria activo) {
+        return model.getArticulos(activo);
     }
+
+    public List<Presentacion> getPresentaciones(Articulo activo) {
+        return model.getPresentaciones(activo);
+    }
+
     public List<Medida> getMedidas() {
         return model.getMedidas();
     }
-    public Medida readMedida(String cod) {
-        return  model.readMedida(cod);
+
+    // Gestión de selecciones actuales
+    public void setCurrentCategoria(Categoria categoria) {
+        model.setCurrentCategoria(categoria);
     }
+
+    public void setCurrentSubcategoria(Subcategoria subcategoria) {
+        model.setCurrentSubcategoria(subcategoria);
+    }
+
+    public void setCurrentArticulo(Articulo articulo) {
+        model.setCurrentArticulo(articulo);
+    }
+
+    public void setCurrentPresentacion(Presentacion presentacion) {
+        model.setCurrentPresentacion(presentacion);
+    }
+
+    // Facturación
+    public void addItemFact(Factura fact) throws Exception {
+        model.addItemFactura(fact);
+    }
+
+    public void clearFactura() {
+        model.clearFactura();
+    }
+
+    public List<Factura> getFacturas() {
+        return model.getFacturas();
+    }
+
+    public void deleteItemFactura(String id) {
+        model.deleteItemFactura(id);
+    }
+
+    public void billing() throws Exception {
+        executeUpdate("REALIZAR_VENTA", model.getFacturas());
+        model.clearFactura();
+        model.setCategorias(executeCommand("GET_CATEGORIAS", List.class));
+    }
+
+    // Métodos auxiliares
+    public ImageIcon getIcon(int icoIndex) {
+        return model.getIcon(icoIndex);
+    }
+
+    // En el Controller
     public Categoria getCurrentCategoria() {
         return model.getCurrentCategoria();
     }
 
     public Subcategoria getCurrentSubcategoria() {
-        return model.getCurrentSubCategoria();
+        return model.getCurrentSubcategoria();
     }
+
     public Articulo getCurrentArticulo() {
         return model.getCurrentArticulo();
     }
+
     public Presentacion getCurrentPresentacion() {
         return model.getCurrentPresentacion();
     }
-    public void editarCategoria(Categoria activo) throws Exception {
-        Service.instance().editarCategoria(activo);
-        model.setCategorias(Service.instance().getCategorias());
-        model.setCurrentCategoria(model.readCategorias(activo.getID()));
-    }
-    public void editarSubCategoria(Subcategoria activo) throws Exception {
-        Service.instance().editarSubCategoria(model.getCurrentCategoria(), activo);
-        model.setCategorias(Service.instance().getCategorias());
-        model.setCurrentCategoria(model.readCategorias(model.getCurrentCategoria().getID()));
-        model.setCurrentSubCategoria(model.readSubCategorias(activo.getID()));
-    }
-    public void editarArticulo(Articulo activo) throws Exception {
-        Service.instance().editarArticulo(model.getCurrentCategoria(),model.getCurrentSubCategoria(), activo);
-        model.setCategorias(Service.instance().getCategorias());
-        model.setCurrentCategoria(model.readCategorias(model.getCurrentCategoria().getID()));
-        model.setCurrentSubCategoria(model.readSubCategorias(model.getCurrentSubCategoria().getID()));
-        model.setCurrentArticulo(model.readArticulos(activo.getID()));
-    }
-    public void editarPresentacion(Presentacion activo) throws Exception {
-        Service.instance().editarPresentacion(model.getCurrentCategoria(),model.getCurrentSubCategoria(),model.getCurrentArticulo(), activo);
-        model.setCategorias(Service.instance().getCategorias());
-        model.setCurrentCategoria(model.readCategorias(model.getCurrentCategoria().getID()));
-        model.setCurrentSubCategoria(model.readSubCategorias(model.getCurrentSubCategoria().getID()));
-        model.setCurrentArticulo(model.readArticulos(model.getCurrentArticulo().getID()));
-        model.setCurrentPresentacion(model.readPresentaciones(activo.getUnidad()+'|'+activo.getCantidad()));
-    }
-    public void deleteCategoria() throws Exception {
-        Service.instance().deleteCategoria(model.getCurrentCategoria());
-        model.setCategorias(Service.instance().getCategorias());
-        model.setCurrentCategoria(null);
-    }
-    public void deleteSubCategoria() throws Exception {
-        Service.instance().deleteSubCategoria(model.getCurrentCategoria(),model.getCurrentSubCategoria());
-        model.setCategorias(Service.instance().getCategorias());
-        model.setCurrentSubCategoria(null);
-    }
-    public void deleteArticulo() throws Exception {
-        Service.instance().deleteArticulo(model.getCurrentCategoria(),model.getCurrentSubCategoria(),model.getCurrentArticulo());
-        model.setCategorias(Service.instance().getCategorias());
-        model.setCurrentArticulo(null);
-    }
-    public void deletePresentation() throws Exception {
-        Service.instance().deletePresentation(model.getCurrentCategoria(),model.getCurrentSubCategoria(),model.getCurrentArticulo(),model.getCurrentPresentacion());
-        model.setCategorias(Service.instance().getCategorias());
-    }
-    public List<Categoria> getCategorias() {
-        return model.getCategorias();
-    }
-    public List<Subcategoria> getSubcategorias(Categoria activo) {
-        return model.getSubcategorias(activo);
-    }
-    public List<Articulo> getArticulos(Subcategoria activo) {
-        return model.getArticulos(activo);
-    }
-    public List<Presentacion> getPresentaciones(Articulo activo) {
-        return model.getPresentaciones(activo);
-    }
-    public void addItemFact(Factura fact) throws Exception {
-        model.addItemFactura(fact);
-    }
-    public void clearFactura(){
-        model.clearFactura();
-    }
-    public List<Factura> getFacturas() {
-        return model.getFacturas();
-    }
-    public void deleteItemFactura(String id){
-        model.deleteItemFactura(id);
-    }
-    public void billing() throws Exception {
-        Service.instance().reduceExistences(model.getFacturas());
-        model.clearFactura();
-        model.setCategorias(Service.instance().getCategorias());
+
+    public Medida findMedida(String id) {
+        return model.findMedida(id);
     }
 }

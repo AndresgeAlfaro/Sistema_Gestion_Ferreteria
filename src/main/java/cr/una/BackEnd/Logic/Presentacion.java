@@ -1,6 +1,9 @@
 package cr.una.BackEnd.Logic;
 
-public class Presentacion {
+import java.io.Serializable;
+
+public class Presentacion implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String unidad;
     private int existencia;
     private double compra,venta, cantidad;

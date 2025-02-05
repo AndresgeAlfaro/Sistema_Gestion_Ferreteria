@@ -107,7 +107,7 @@ public class View {
             public void windowClosing(WindowEvent e) {
                 try{
                     Service.instance().guardarXML();
-                    controller.starLogin();
+                    controller.startLogin();
 
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Información", JOptionPane.ERROR_MESSAGE);
@@ -751,7 +751,7 @@ public class View {
     }
     public void selectCategoria(String id) {
         try{
-            controller.editCategoria(id);
+            controller.editarCategoria(id);
             Categoria actual = controller.getCurrentCategoria();
             editar[0] = true;
             inputs[0][0].setEnabled(false);
@@ -774,7 +774,7 @@ public class View {
     }
     public void selectSubCategoria(String id) {
         try{
-            controller.editSubCategoria(id);
+            controller.editarSubCategoria(id);
             Subcategoria actual = controller.getCurrentSubcategoria();
             editar[1] = true;
             inputs[1][0].setEnabled(false);
@@ -796,7 +796,7 @@ public class View {
     }
     public void selectArticulo(String id) {
         try{
-            controller.editArticulo(id);
+            controller.editarArticulo(id);
             Articulo actual = controller.getCurrentArticulo();
             editar[2] = true;
             inputs[2][0].setEnabled(false);
@@ -815,7 +815,7 @@ public class View {
     }
     public void selectPresentacion(String id) {
         try{
-            controller.editPresentacion(id);
+            controller.editarPresentacion(id);
             Presentacion presentacion = controller.getCurrentPresentacion();
             editar[3] = true;
             ComboPre.setEnabled(false);
@@ -968,7 +968,7 @@ public class View {
                     setTextList(option,"Existencias");
                     setTextList(option,"");
                     for(Presentacion presentacion : lista){
-                        setTextInput(option,controller.readMedida(presentacion.getUnidad()).getName());
+                        setTextInput(option,controller.findMedida(presentacion.getUnidad()).getName());
                         setTextInput(option,String.valueOf(presentacion.getCantidad()));
                         setTextInput(option,String.valueOf(presentacion.getCompra())+'$');
                         setTextInput(option,String.valueOf(presentacion.getVenta())+'$');
