@@ -31,19 +31,43 @@ public class Controller {
     }
     public boolean checkLogin(String username, String password ) throws Exception{
         try {
+            try{
+                Service.instance().cargarXML();
+            }catch (Exception ex){
+                System.out.println(ex.getMessage());
+            }
+            model.softSetUsers(Service.instance().getUsers());
+
             User user = model.checkLogin(username, password);
             boolean login=false;
-            if(user.getState().equals("Activo")){
+            if(user.getState().equals("Inactivo")){
                 if(user.getPassword().equals(password)){
+                    model.setUserState(user,"Activo");
+                    model.setCurrentUser(user);
+                    updateUsers(model.getUsers());
+                    try{
+                        Service.instance().guardarXML();
+
+                    }catch (Exception ex){
+                        System.out.println(ex.getMessage());
+                    }
                     login=true;
                 }else{
                     if(model.addTrie(username)==3){
                         updateUsers(model.getUsers());
+                        try{
+                            Service.instance().guardarXML();
+
+                        }catch (Exception ex){
+                           System.out.println(ex.getMessage());
+                        }
                         throw new Exception("Limite de Intentos Excedido - Bloqueando Usuario");
                     }else{
                         throw new Exception("Credenciales Incorrectas - Intente Denuevo");
                     }
                 }
+            }else if(user.getState().equals("Activo")){
+                throw new Exception("Este Usuario ya esta Activo");
             }else{
                 throw new Exception("Este Usuario esta Bloqueado");
             }
@@ -56,6 +80,17 @@ public class Controller {
         }catch (Exception ex){
             throw new Exception(ex.getMessage());
         }
+
+    }
+    public void Loggout(){
+        model.setUserState(model.getCurrentUser(),"Inactivo");
+        model.setCurrentUser(null);
+        try {
+            updateUsers(model.getUsers());
+        }catch (Exception ex){
+
+        }
+
 
     }
     public void startAplication() {

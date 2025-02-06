@@ -18,6 +18,7 @@ public class Model {
     private Articulo currentArticulo;
     private Presentacion currentPresentacion;
     private ImageIcon[] myIcons = {new ImageIcon(Paths.get("icoCheck0.png").toString()),new ImageIcon(Paths.get("icoCheck1.png").toString())};
+    private User currentUser;
 
     private List<Factura> facturas;
 
@@ -49,7 +50,13 @@ public class Model {
         }
         return 0;
     }
-
+    public void setUserState(User user, String state){
+        for(User u : users){
+            if(u.getUsername().equals(user.getUsername())){
+                u.setState(state);
+            }
+        }
+    }
     public ImageIcon getIcon(int i){
         return myIcons[i];
     }
@@ -85,6 +92,12 @@ public class Model {
     public void setUsers(List<User> users) {
         this.users = users;
     }
+    public void softSetUsers(List<User> users) {
+        for(int i=0; i<users.size(); i++){
+            users.get(i).setTries(this.users.get(i).getTries());
+            this.users.set(i, users.get(i));
+        }
+    }
     public Medida readMedida(String id){
         Medida result = getMedidas().stream()
                 .filter(i->i.getID().equals(id)).findFirst().orElse(null);
@@ -114,6 +127,12 @@ public class Model {
         Presentacion result = currentArticulo.getPresentaciones().stream()
                 .filter(i->i.getUnidad().equals(cat)&&i.getCantidad()==(Double.parseDouble(cant))).findFirst().orElse(null);
         return result;
+    }
+    public User getCurrentUser() {
+        return currentUser;
+    }
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
     public Categoria getCurrentCategoria() {
         return currentCategoria;

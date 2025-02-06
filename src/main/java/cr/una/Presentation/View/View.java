@@ -105,6 +105,7 @@ public class View {
         window.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                controller.Loggout();
                 try{
                     Service.instance().guardarXML();
                     controller.starLogin();

@@ -30,4 +30,7 @@ public class User {
     public void addTries() {
         tries++;
     }
+    public void setTries(int tries) {
+        this.tries = tries;
+    }
 }

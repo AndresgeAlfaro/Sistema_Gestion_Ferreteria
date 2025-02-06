@@ -4,7 +4,7 @@
         <usuario>
             <username>JohnDoe</username>
             <password>MyP455W04D</password>
-            <state>Activo</state>
+            <state>Inactivo</state>
         </usuario>
         <usuario>
             <username>JaneDoe</username>
@@ -14,7 +14,7 @@
         <usuario>
             <username>JuanPerez</username>
             <password>AnyPassword</password>
-            <state>Activo</state>
+            <state>Inactivo</state>
         </usuario>
     </usuarios>
     <medidas>
